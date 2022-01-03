@@ -1,0 +1,5 @@
+build/**
+Engine/_External/fmt
+Engine/_External/glad
+Engine/_External/glfw
+Engine/_External/glm
