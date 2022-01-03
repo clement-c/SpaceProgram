@@ -1,3 +1,5 @@
+#include <glad/gl.h>
+
 #include "Engine/Core/Logging.hpp"
 #include "Engine/Graphics/GL/GLBuffer.hpp"
 

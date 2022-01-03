@@ -1,4 +1,3 @@
-#include <iostream>
 #include <glad/gl.h>
 
 #include "Engine/Core/Logging.hpp"

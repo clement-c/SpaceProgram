@@ -1,3 +1,5 @@
+#include <glad/gl.h>
+
 #include "Engine/Graphics/GL/GLShader.hpp"
 #include "Engine/Core/Logging.hpp"
 
@@ -6,6 +8,7 @@
 GLShader::GLShader(GLShader::Type tp)
 {
 	m_id = glCreateShader(static_cast<GLenum>(tp));
+	glCheckError();
 }
 
 uint32_t GLShader::GetId() const
@@ -17,6 +20,7 @@ bool GLShader::SetSource(std::string const& src)
 {
 	char const* chars = src.c_str();
 	glShaderSource(m_id, 1, &chars, nullptr);
+	glCheckError();
 	return true;
 }
 
@@ -36,6 +40,7 @@ bool GLShader::Compile()
 bool GLShader::Delete()
 {
 	glDeleteShader(m_id);
+	glCheckError();
 	return true;
 }
 

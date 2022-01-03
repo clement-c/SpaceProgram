@@ -7,8 +7,6 @@
 #include "Engine/Core/Application.hpp"
 #include "Engine/Core/Logging.hpp"
 
-#include <iostream>
-
 using namespace std::chrono_literals;
 
 
