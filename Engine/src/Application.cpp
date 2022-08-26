@@ -7,8 +7,8 @@
 #include "Engine/Core/Application.hpp"
 #include "Engine/Core/Logging.hpp"
 
-using namespace std::chrono_literals;
 
+using namespace std::chrono_literals;
 
 
 Application::Application() : m_windowsManager{}, m_loop{} {
@@ -87,6 +87,17 @@ uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::s
 {
 	m_windowsManager.NewWindow(w, h, title);
 	return static_cast<uint32_t>(m_windowsManager.NumWindows() - 1);
+}
+
+bool Application::InitializeEngine()
+{
+	m_engine.Initialize();
+	return m_engine.IsInitialized();
+}
+
+Engine& Application::GetEngine()
+{
+	return m_engine;
 }
 
 WindowsManager& Application::GetWindowsManager() { return m_windowsManager; }

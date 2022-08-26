@@ -124,6 +124,7 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 	auto* ptr = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
 	if (!ptr) return nullptr;
 
+	auto winId = m_windows.size();
 	m_windows.push_back(ptr);
 
 	glfwMakeContextCurrent(ptr);
@@ -203,7 +204,7 @@ bool WindowsManager::SetWindowTitle(size_t winId, std::string const& title) cons
 	else return false;
 }
 
-bool WindowsManager::SetWindowFullscreen(size_t winId, bool) const
+bool WindowsManager::SetWindowFullscreen(size_t winId, bool, uint8_t screenId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
@@ -223,7 +224,7 @@ bool WindowsManager::SetWindowSize(size_t winId, uint32_t w, uint32_t h) const
 	else return false;
 }
 
-bool WindowsManager::CenterWindow(uint32_t winId, uint32_t screenId) const
+bool WindowsManager::CenterWindow(uint32_t winId, uint8_t screenId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
@@ -250,7 +251,7 @@ bool WindowsManager::CenterWindow(uint32_t winId, uint32_t screenId) const
 	else return false;
 }
 
-bool WindowsManager::SetWindowTopLeftCorner(size_t winId, uint32_t x, uint32_t y) const
+bool WindowsManager::SetWindowTopLeftCorner(size_t winId, uint32_t x, uint32_t y, uint8_t screenId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{

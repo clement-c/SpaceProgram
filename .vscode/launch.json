@@ -5,10 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "cl.exe - Build and debug active file",
+            "name": "01_GLWindowTriangle Debug",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "C:\\Users\\cleme\\Documents\\Dev\\Install\\Debug\\bin\\01_GLWindowTriangle.exe",
+            "program": "${workspaceFolder}\\..\\Install\\Debug\\bin\\01_GLWindowTriangle.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "externalTerminal"
+            // "preLaunchTask": "C/C++: cl.exe build active file"
+        },
+        {
+            "name": "02_GLSphere Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\..\\Install\\Debug\\bin\\02_GLSphere.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

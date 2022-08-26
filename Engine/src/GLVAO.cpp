@@ -16,7 +16,7 @@ GLVAO::GLVAO(std::map<int, AttribPointerType> const& attribs)
 	{
 		auto& tup = idAttrib.second;
 		std::get<0>(tup).Bind();
-		m_length = (std::get<0>(tup).GetNumEntries() / std::get<1>(tup));
+		m_length = (std::get<0>(tup).GetNumComponents() / std::get<1>(tup));
 		glVertexAttribPointer(idAttrib.first, std::get<1>(tup), std::get<2>(tup), std::get<3>(tup), std::get<4>(tup), std::get<5>(tup));
 		glEnableVertexAttribArray(idAttrib.first);
     	glCheckError();

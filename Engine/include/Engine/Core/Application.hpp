@@ -5,6 +5,9 @@
 
 #include "Lib.hpp"
 #include "WindowsManager.hpp"
+#include "../Engine.hpp"
+
+class Engine;
 
 class Application
 {
@@ -27,6 +30,9 @@ public:
 
 	DLLEXPORT WindowsManager& GetWindowsManager();
 
+	DLLEXPORT bool InitializeEngine();
+	DLLEXPORT Engine& GetEngine();
+
 	DLLEXPORT int Run();
 
 protected:
@@ -34,4 +40,5 @@ protected:
 
 	WindowsManager m_windowsManager;
 	LoopType m_loop;
+	Engine m_engine;
 };

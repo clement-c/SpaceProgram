@@ -31,7 +31,46 @@ bool GLBuffer::SetData(float* data, size_t bufferSize, int usage)
     glBufferData(static_cast<int>(m_type), m_num * sizeof(float), data, usage);
     glCheckError();
     Unbind();
+    m_dataType = GL_FLOAT;
     return true;
+}
+
+bool GLBuffer::SetData(unsigned int* data, size_t bufferSize, int usage)
+{
+    Bind();
+    m_num = bufferSize / sizeof(unsigned int);
+    glBufferData(static_cast<int>(m_type), m_num * sizeof(unsigned int), data, usage);
+    glCheckError();
+    Unbind();
+    m_dataType = GL_UNSIGNED_INT;
+    return true;
+}
+
+bool GLBuffer::SetData(int* data, size_t bufferSize, int usage)
+{
+    Bind();
+    m_num = bufferSize / sizeof(int);
+    glBufferData(static_cast<int>(m_type), m_num * sizeof(int), data, usage);
+    glCheckError();
+    Unbind();
+    m_dataType = GL_INT;
+    return true;
+}
+
+bool GLBuffer::SetData(double* data, size_t bufferSize, int usage)
+{
+    Bind();
+    m_num = bufferSize / sizeof(double);
+    glBufferData(static_cast<int>(m_type), m_num * sizeof(double), data, usage);
+    glCheckError();
+    Unbind();
+    m_dataType = GL_DOUBLE;
+    return true;
+}
+
+int GLBuffer::GetDataType() const
+{
+    return m_dataType;
 }
 
 GLBuffer::Type GLBuffer::GetType() const
@@ -44,7 +83,7 @@ uint32_t GLBuffer::GetId() const
     return m_id;
 }
 
-size_t GLBuffer::GetNumEntries() const
+size_t GLBuffer::GetNumComponents() const
 {
     return m_num;
 }

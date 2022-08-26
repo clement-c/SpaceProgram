@@ -1,1 +1,2 @@
 add_subdirectory(01_GLWindowTriangle)
+add_subdirectory(02_GLSphere)

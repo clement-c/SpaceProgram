@@ -31,7 +31,7 @@ int main()
 
     // Register the buffers and their layouts in a VAO
     GLVAO triangleVAO({
-        { 0, {vbo, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)(0)} }
+        { 0, {vbo, 3, GL_FLOAT, false, (int)(3 * sizeof(float)), (void*)(0)} }
     });
 
     GLProgram program;
