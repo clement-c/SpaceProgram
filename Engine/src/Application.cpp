@@ -71,6 +71,14 @@ inline bool Application::ShouldExit()
 	return false;
 }
 
+bool Application::Exit(int code)
+{
+	bool allWindowsClosed = true;
+	for(auto i = 0; i < GetWindowsManager().NumWindows(); i++)
+		allWindowsClosed = allWindowsClosed && (m_windowsManager.CloseWindow(i));
+	return allWindowsClosed;
+}
+
 uint32_t const Application::NewWindow()
 {
 	m_windowsManager.NewWindow();
@@ -89,11 +97,11 @@ uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::s
 	return static_cast<uint32_t>(m_windowsManager.NumWindows() - 1);
 }
 
-bool Application::InitializeEngine()
-{
-	m_engine.Initialize();
-	return m_engine.IsInitialized();
-}
+// bool Application::InitializeEngine()
+// {
+// 	m_engine.Initialize();
+// 	return m_engine.IsInitialized();
+// }
 
 Engine& Application::GetEngine()
 {

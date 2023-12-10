@@ -2,5 +2,9 @@
 
 struct DataBuffer
 {
+    struct DataBlock
+    {
+
+    };
     void AddBlock();
 };

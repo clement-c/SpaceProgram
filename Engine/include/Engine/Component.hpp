@@ -1,12 +1,7 @@
 #pragma once
+#include <bitset>
+#include <limits>
 
-class Component
-{
-public:
-    // bool IsLoaded() const; -> always loaded? Entity instance their own components
-
-    // Pointers in the buffer of the system
-    // TODO: replace with Buffer and custom memory manager
-    void* DataStart() const;
-    void* DataEnd() const;
-};
+using ComponentType = uint8_t;
+static constexpr ComponentType kMaxComponents = std::numeric_limits<ComponentType>::max();
+using ComponentsSignature = std::bitset<kMaxComponents>;

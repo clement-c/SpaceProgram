@@ -1,2 +1,0 @@
-// RenderableMesh component
-// RenderableLine component

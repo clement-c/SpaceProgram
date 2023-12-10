@@ -12,9 +12,8 @@ find_package(OpenGL REQUIRED)
 
 set(LIB_NAME "Engine")
 set(ENGINE_SOURCE_FILES
-    "src/Application.cpp" "src/Engine.cpp" "src/WindowsManager.cpp"
-    "src/GLBuffer.cpp" "src/GLProgram.cpp" "src/GLShader.cpp" "src/GLVAO.cpp"
-    "src/Cube.cpp") # "src/Mesh.cpp")
+    "src/Application.cpp" "src/Engine.cpp" "src/Entity.cpp" "src/WindowsManager.cpp" "src/ResourceManager.cpp" 
+    "src/Scene.cpp" "src/GLBuffer.cpp" "src/GLProgram.cpp" "src/GLShader.cpp" "src/GLVAO.cpp")
 
 add_library(${LIB_NAME} SHARED ${ENGINE_SOURCE_FILES})
 
@@ -25,11 +24,9 @@ target_include_directories(${LIB_NAME} PUBLIC
     $<INSTALL_INTERFACE:include> 
     PRIVATE src
 )
-target_link_libraries(${LIB_NAME} PRIVATE glad glm fmt glfw OpenGL::GL)
+target_link_libraries(${LIB_NAME} PRIVATE glad glm::glm fmt glfw OpenGL::GL)
 
 # Define installation targets
-
-include(GNUInstallDirs)
 
 install(TARGETS ${LIB_NAME} EXPORT ${LIB_NAME}Config
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}

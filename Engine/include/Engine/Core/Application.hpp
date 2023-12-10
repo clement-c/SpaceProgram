@@ -7,8 +7,6 @@
 #include "WindowsManager.hpp"
 #include "../Engine.hpp"
 
-class Engine;
-
 class Application
 {
 public:
@@ -30,10 +28,12 @@ public:
 
 	DLLEXPORT WindowsManager& GetWindowsManager();
 
-	DLLEXPORT bool InitializeEngine();
+	// DLLEXPORT bool InitializeEngine();
 	DLLEXPORT Engine& GetEngine();
 
 	DLLEXPORT int Run();
+
+	DLLEXPORT bool Exit(int = 0);
 
 protected:
 	inline bool ShouldExit();

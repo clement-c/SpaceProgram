@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <string>
 
+// #include <glm/glm.hpp>
+
 class GLShader
 {
 public:
@@ -35,6 +37,11 @@ public:
 
 	int GetInfo(InfoType) const;
 	std::string GetInfoLog() const;
+
+	bool SetUniform(GLShader::Type, std::string const uniformName, int value);
+	bool SetUniform(GLShader::Type, std::string const uniformName, float value);
+	bool SetUniform(GLShader::Type, std::string const uniformName, double value);
+	// bool SetUniform(GLShader::Type, std::string const uniformName, glm::mat4 const&);
 
 private:
 	uint32_t m_id;

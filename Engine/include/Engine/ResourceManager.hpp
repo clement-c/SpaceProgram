@@ -1,10 +1,13 @@
 #pragma once
+#include <stdint.h>
+
+// Game resources vs scene resources
 
 class ResourceManager
 {
 public:
-    bool PreloadBuffer(); // preload a buffer from files or memory, return as address holder
+    ResourceManager();
 
-    template<typename EntityType>
-    uint32_t LoadEntity(bool lazyLoad = false, int preloadLevel=-1);
+    uint32_t AddEntity();
+    bool PreloadBuffer(); // preload a buffer from files or memory, return as address holder
 };

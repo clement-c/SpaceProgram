@@ -7,8 +7,12 @@
 
 std::string const GLProgram::DefaultVertexSource = R"vert(#version 330 core
 layout (location = 0) in vec3 aPos;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 void main()
 {
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 })vert";
 
@@ -28,6 +32,7 @@ bool GLProgram::SetShader(GLShader::Type shaderType, std::string const& src)
 {
 	if (m_linked) {
 		CC_LOG_ERROR("Cannot set a shader after the program was linked.\n");
+		return false;
 	}
 	CC_LOG_DEBUG("Adding shader {} to program\n", static_cast<uint32_t>(shaderType));
 
@@ -35,6 +40,14 @@ bool GLProgram::SetShader(GLShader::Type shaderType, std::string const& src)
 	auto& shader = (*pair.first).second;
 	shader.SetSource(src);
 	return shader.Compile();
+}
+
+GLShader* const GLProgram::GetShader(GLShader::Type shaderType)
+{
+	auto result = m_shaders.find(shaderType);
+	if(result != m_shaders.cend())
+		return &(result->second);
+	return nullptr;
 }
 
 int GLProgram::GetInfo(GLProgram::InfoType tp) const

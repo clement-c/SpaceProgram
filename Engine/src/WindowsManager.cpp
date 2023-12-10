@@ -103,8 +103,6 @@ void* const WindowsManager::NewWindow()
 	// TODO: share resource if second window
 	auto* ptr = NewWindow(1280, 720, "Untitled");
 	return ptr;
-
-	return ptr;
 }
 
 void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h)
@@ -180,6 +178,17 @@ bool WindowsManager::MakeWindowCurrent(size_t winId) const
 bool WindowsManager::SwapBuffers(size_t winId) const
 {
 	glfwSwapBuffers((GLFWwindow*)m_windows.at(winId));
+	return true;
+}
+
+
+bool WindowsManager::CloseWindow(size_t winId) const
+{
+	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
+	{
+		glfwSetWindowShouldClose((GLFWwindow*)m_windows.at(winId), GLFW_TRUE);
+		return true;
+	}
 	return true;
 }
 

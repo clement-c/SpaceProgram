@@ -40,13 +40,10 @@ public:
 	DLLEXPORT std::string GetInfoLog() const;
 
 	DLLEXPORT bool SetShader(GLShader::Type shaderType, std::string const& src);
+	DLLEXPORT GLShader* const GetShader(GLShader::Type shaderType);
 
 	DLLEXPORT bool Link(bool deleteShaders=true);
 	DLLEXPORT bool Use();
-
-	bool SetUniform(std::string const uniformName, int value);
-	bool SetUniform(std::string const uniformName, float value);
-	bool SetUniform(std::string const uniformName, double value);
 
 private:
 	std::unordered_map<GLShader::Type, GLShader> m_shaders;

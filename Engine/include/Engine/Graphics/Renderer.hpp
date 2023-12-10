@@ -4,7 +4,7 @@ class Renderer
     enum class API
     {
         kVulkan,
-        kOpenGl45,
+        kOpenGL45,
         kDirect3D12
     };
 
@@ -25,7 +25,7 @@ class Renderer
 #else
             return false;
 #endif
-        case API::kOpenGl45:
+        case API::kOpenGL45:
 #ifdef ENGINE_IMPLEMENTS_OPENGL
             return true;
 #else
@@ -51,6 +51,6 @@ class Renderer
      */
     static bool HostSupports(API api)
     {
-        return false;
+        return RendererImplements(api) && true; // TODO: find a way to check support at runtime
     }
 };
