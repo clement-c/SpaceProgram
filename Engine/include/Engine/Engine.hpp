@@ -9,7 +9,6 @@
 #include "Core/Lib.hpp"
 #include "Runtime/ComponentsSets.hpp"
 
-
 class Engine
 {
 public:
@@ -24,10 +23,12 @@ public:
 
         // Core/statically-defined components to register
         std::bitset<kMaxComponents> components_to_register;
-        std::bitset<8> components_groups_to_register; // ComponentsSets::kHierarchyComponents && ComponentsSets::kRenderComponents;
+        std::bitset<16> components_groups_to_register; // ComponentsSets::kHierarchyComponents && ComponentsSets::kRenderComponents;
 
         // Core/statically-defined entities to register
         // ...
+
+        // Supported input devices, joysticks, controllers, etc
 
         // Core devices to register / launch
         // devices = {}
@@ -39,12 +40,13 @@ public:
     DLLEXPORT Engine();
 
     DLLEXPORT bool Initialize(); // Setup basic systems and their dependencies, register core datatypes
-    DLLEXPORT bool Initialize(InitOptions const&);
+    DLLEXPORT bool Initialize(InitOptions const &);
     DLLEXPORT bool IsInitialized() const;
 
+    ResourceManager &GetResourceManager();
     // DLLEXPORT int AddSystem();
 
 private:
-    ResourceManager m_rscManager;
+    ResourceManager m_rsc_manager;
     bool m_initialized = false;
 };

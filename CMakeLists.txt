@@ -8,7 +8,8 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
+option(BUILD_TESTS "Build tests" ON)
 
 include(GNUInstallDirs)
 
@@ -41,4 +42,10 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/../Install/${CMAKE_BUILD_T
 set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/share")
 
 add_subdirectory(Engine)
+
+if (${BUILD_TESTS})
+  enable_testing()
+  add_subdirectory(Tests)
+endif()
+
 add_subdirectory(Deliverables)

@@ -35,8 +35,10 @@ struct Scene
 
     // Add entities, for now scene manages resources,
     //   later will switch to a ResourceManager for shared entities
-    DLLEXPORT uint32_t AddEntity(Entity::Gizmo2D);
-    DLLEXPORT uint32_t AddEntity(Entity::Gizmo3D);
+
+    DLLEXPORT Entity::EntityId AddEntity(/*resourceId*/);
+    // DLLEXPORT Entity::EntityId AddEntity(Entity::Gizmo2D);
+    // DLLEXPORT Entity::EntityId AddEntity(Entity::Gizmo3D);
 
     bool Clear(); // Remove all entities
 

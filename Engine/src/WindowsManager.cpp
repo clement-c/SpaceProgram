@@ -5,57 +5,57 @@
 #include <GLFW/glfw3.h>
 
 
-class EventsManager
+class WindowsEventsManager
 {
 public:
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		CC_LOG_INFO("Key event: {}\n", key);
+		// CC_LOG_INFO("Key event: {}\n", key);
 	}
 
 	static void CharCallback(GLFWwindow* window, unsigned int codepoint)
 	{
-		CC_LOG_INFO("Char callback: {}\n", codepoint);
+		// CC_LOG_INFO("Char callback: {}\n", codepoint);
 	}
 
 	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
-		CC_LOG_INFO("Mouse Button callback: {}/{}/{}\n", button, action, mods);
+		// CC_LOG_INFO("Mouse Button callback: {}/{}/{}\n", button, action, mods);
 	}
 
 	static void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	{
-		CC_LOG_INFO("Cursor pos callback: {}/{}\n", xpos, ypos);
+		// CC_LOG_INFO("Cursor pos callback: {}/{}\n", xpos, ypos);
 	}
 
 	static void CursorEnterCallback(GLFWwindow* window, int entered)
 	{
-		CC_LOG_INFO("Mous enter callback {}\n", entered);
+		// CC_LOG_INFO("Mouse enter callback {}\n", entered);
 	}
 
 	static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 	{
-		CC_LOG_INFO("Mouse enter callback {}/{}\n", xoffset, yoffset);
+		// CC_LOG_INFO("Mouse enter callback {}/{}\n", xoffset, yoffset);
 	}
 
 	static void DropCallback(GLFWwindow* window, int path_count, const char* paths[])
 	{
-		CC_LOG_INFO("Drop callback {}\n", path_count);
+		// CC_LOG_INFO("Drop callback {}\n", path_count);
 	}
 
 	static void WindowSizeCallback(GLFWwindow* window, int width, int height)
 	{
-		CC_LOG_INFO("Drop callback {}/{}\n", width, height);
+		// CC_LOG_INFO("Drop callback {}/{}\n", width, height);
 	}
 
 	static void WindowPosCallback(GLFWwindow* window, int xpos, int ypos)
 	{
-		CC_LOG_INFO("Window pos callback {}/{}\n", xpos, ypos);
+		// CC_LOG_INFO("Window pos callback {}/{}\n", xpos, ypos);
 	}
 
 	static void WindowCloseCallback(GLFWwindow* window)
 	{
-		CC_LOG_INFO("Window close callback\n");
+		// CC_LOG_INFO("Window close callback\n");
 	}
 
 };
@@ -144,21 +144,27 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 	}
 
 	glfwSetKeyCallback(ptr, [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
-	glfwSetCharCallback(ptr, EventsManager::CharCallback);
-	glfwSetMouseButtonCallback(ptr, EventsManager::MouseButtonCallback);
-	glfwSetCursorPosCallback(ptr, EventsManager::CursorPosCallback);
-	glfwSetCursorEnterCallback(ptr, EventsManager::CursorEnterCallback);
-	glfwSetScrollCallback(ptr, EventsManager::ScrollCallback);
-	glfwSetDropCallback(ptr, EventsManager::DropCallback);
-	glfwSetWindowPosCallback(ptr, EventsManager::WindowPosCallback);
-	glfwSetWindowSizeCallback(ptr, EventsManager::WindowSizeCallback);
-	glfwSetWindowCloseCallback(ptr, EventsManager::WindowCloseCallback);
+	glfwSetCharCallback(ptr, WindowsEventsManager::CharCallback);
+	glfwSetMouseButtonCallback(ptr, WindowsEventsManager::MouseButtonCallback);
+	glfwSetCursorPosCallback(ptr, WindowsEventsManager::CursorPosCallback);
+	glfwSetCursorEnterCallback(ptr, WindowsEventsManager::CursorEnterCallback);
+	glfwSetScrollCallback(ptr, WindowsEventsManager::ScrollCallback);
+	glfwSetDropCallback(ptr, WindowsEventsManager::DropCallback);
+	glfwSetWindowPosCallback(ptr, WindowsEventsManager::WindowPosCallback);
+	glfwSetWindowSizeCallback(ptr, WindowsEventsManager::WindowSizeCallback);
+	glfwSetWindowCloseCallback(ptr, WindowsEventsManager::WindowCloseCallback);
 
 	return ptr;
 }
 
+int WindowsManager::GetNumMonitors() const
+{
+	int result = 0;
+	glfwGetMonitors(&result);
+	return result;
+}
 
-size_t WindowsManager::NumWindows() const
+size_t WindowsManager::GetNumWindows() const
 {
 	return m_windows.size();
 }
@@ -166,7 +172,7 @@ size_t WindowsManager::NumWindows() const
 
 bool WindowsManager::MakeWindowCurrent(size_t winId) const
 {
-	if(winId < NumWindows())
+	if(winId < GetNumWindows())
 	{
 		glfwMakeContextCurrent((GLFWwindow*)m_windows.at(winId));
 		return true;

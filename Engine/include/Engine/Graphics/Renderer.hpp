@@ -1,3 +1,6 @@
+#pragma once
+
+struct Scene;
 
 class Renderer
 {
@@ -44,13 +47,16 @@ class Renderer
 
     /**
      * @brief Check whether the current host supports a given graphics API
-     * 
-     * @param api 
-     * @return true 
-     * @return false 
+     *
+     * @param api
+     * @return true
+     * @return false
      */
     static bool HostSupports(API api)
     {
-        return RendererImplements(api) && true; // TODO: find a way to check support at runtime
+        return RendererImplements(api) && true; // TODO: implement checking support at runtime if api is implemented
     }
+
+    // void Render(Scene const *scene) const;
+
 };

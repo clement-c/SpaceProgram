@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 /*
 Entity has multiple components
@@ -19,28 +20,30 @@ class Entity
 {
 public:
 
-    enum Scene
-    {
-        k3dMeshInstancer,
-        k3dMeshTransform
-    };
+    using EntityId = uint32_t;
 
-    enum class Gizmo3D
-    {
-        // kManipulator,
-        kCamera,
-        // kCapsule,
-        // kDebugCube,
-        kDebugSphere
-    };
+    // enum Scene
+    // {
+    //     k3dMeshInstancer,
+    //     k3dMeshTransform
+    // };
 
-    enum class Gizmo2D
-    {
-        kButton,
-        kLabel,
-        kLineEdit,
-        kSlider
-    };
+    // enum class Gizmo3D
+    // {
+    //     // kManipulator,
+    //     kCamera,
+    //     // kCapsule,
+    //     // kDebugCube,
+    //     kDebugSphere
+    // };
+
+    // enum class Gizmo2D
+    // {
+    //     kButton,
+    //     kLabel,
+    //     kLineEdit,
+    //     kSlider
+    // };
 
 private:
     // std::vector<Component*> m_components;

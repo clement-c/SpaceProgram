@@ -92,7 +92,10 @@
 			"typeindex": "cpp",
 			"variant": "cpp",
 			"unordered_set": "cpp",
-			"bitset": "cpp"
+			"bitset": "cpp",
+			"condition_variable": "cpp",
+			"deque": "cpp",
+			"mutex": "cpp"
 		}
 	}
 }

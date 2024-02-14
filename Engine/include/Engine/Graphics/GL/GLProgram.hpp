@@ -8,7 +8,8 @@
 class GLProgram
 {
 public:
-	enum class InfoType {
+	enum class InfoType
+	{
 		kDeleteStatus = GL_DELETE_STATUS,
 		kLinkStatus = GL_LINK_STATUS,
 		kValidateStatus = GL_VALIDATE_STATUS,
@@ -36,14 +37,21 @@ public:
 
 	DLLEXPORT GLProgram();
 
+	DLLEXPORT uint32_t GetId() const;
 	DLLEXPORT int GetInfo(InfoType) const;
 	DLLEXPORT std::string GetInfoLog() const;
 
-	DLLEXPORT bool SetShader(GLShader::Type shaderType, std::string const& src);
-	DLLEXPORT GLShader* const GetShader(GLShader::Type shaderType);
+	DLLEXPORT bool SetShader(GLShader::Type shaderType, std::string const &src);
+	DLLEXPORT GLShader *const GetShader(GLShader::Type shaderType);
 
-	DLLEXPORT bool Link(bool deleteShaders=true);
+	DLLEXPORT bool Link(bool deleteShaders = true);
 	DLLEXPORT bool Use();
+
+	DLLEXPORT bool SetUniform(std::string const uniformName, int value); // GLShader::Type, 
+	DLLEXPORT bool SetUniform(std::string const uniformName, float value); // GLShader::Type, 
+	DLLEXPORT bool SetUniform(std::string const uniformName, double value); // GLShader::Type, 
+	DLLEXPORT bool SetUniform(std::string const uniformName, Matrix44 const& value); // GLShader::Type, 
+	// bool SetUniform(GLShader::Type, std::string const uniformName, glm::mat4 const&);
 
 private:
 	std::unordered_map<GLShader::Type, GLShader> m_shaders;

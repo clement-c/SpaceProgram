@@ -12,7 +12,7 @@ find_package(OpenGL REQUIRED)
 
 set(LIB_NAME "Engine")
 set(ENGINE_SOURCE_FILES
-    "src/Application.cpp" "src/Engine.cpp" "src/Entity.cpp" "src/WindowsManager.cpp" "src/ResourceManager.cpp" 
+    "src/Application.cpp" "src/Engine.cpp" "src/Entity.cpp" "src/WindowsManager.cpp" "src/Math.cpp" "src/ResourceManager.cpp" 
     "src/Scene.cpp" "src/GLBuffer.cpp" "src/GLProgram.cpp" "src/GLShader.cpp" "src/GLVAO.cpp")
 
 add_library(${LIB_NAME} SHARED ${ENGINE_SOURCE_FILES})

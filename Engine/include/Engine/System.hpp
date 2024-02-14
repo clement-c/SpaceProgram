@@ -20,6 +20,8 @@ struct System
         return true;
     }
 
+    virtual bool Run() = 0;
+
     template<typename T>
     T& GetComponent();
 };

@@ -3,7 +3,7 @@
 ## Core Systems
 
 Order:
-Events > [ Time/TimerUpdate ] > Animator(TimeRemap) {TimedAnim} > SceneHierarchy {Parent} > Renderer {Mesh<>Material}
+Events > [ Time/TimerUpdate ] > Animator(TimeRemap) {TimedAnim} > SceneHierarchy {Parent} > Renderer {Mesh<>Material} (then update screen with rendered Framebuffer)
 
 ### Animator
 

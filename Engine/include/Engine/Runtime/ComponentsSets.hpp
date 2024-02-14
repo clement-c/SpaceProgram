@@ -4,5 +4,5 @@ struct ComponentsSets
 {
     static constexpr uint32_t kHierarchyComponents = 1 << 0;
     static constexpr uint32_t kRenderComponents = 1 << 1;
-    static constexpr uint32_t kRenderComponentsB = 1 << 2;
+    // static constexpr uint32_t kRenderComponentsB = 1 << 2;
 };

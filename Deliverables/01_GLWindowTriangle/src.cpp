@@ -45,7 +45,7 @@ int main()
         // double timeSec = timeMs * 1.0e-3;
         // fps = 1.0 / (timeSec - prevSec);
         // prevSec = timeSec;
-        for (auto i = 0; i < winManager.NumWindows(); i++)
+        for (auto i = 0; i < winManager.GetNumWindows(); i++)
         {
             winManager.MakeWindowCurrent(i);
 

@@ -23,29 +23,36 @@ void main()
     FragColor = vec4(0.67f, 0.67f, 0.67f, 1.0f);
 })frag";
 
-GLProgram::GLProgram() {
+GLProgram::GLProgram()
+{
 	m_id = glCreateProgram();
 	glCheckError();
 }
 
-bool GLProgram::SetShader(GLShader::Type shaderType, std::string const& src)
+uint32_t GLProgram::GetId() const
 {
-	if (m_linked) {
+	return m_id;
+}
+
+bool GLProgram::SetShader(GLShader::Type shaderType, std::string const &src)
+{
+	if (m_linked)
+	{
 		CC_LOG_ERROR("Cannot set a shader after the program was linked.\n");
 		return false;
 	}
 	CC_LOG_DEBUG("Adding shader {} to program\n", static_cast<uint32_t>(shaderType));
 
 	auto pair = m_shaders.try_emplace(shaderType, shaderType);
-	auto& shader = (*pair.first).second;
+	auto &shader = (*pair.first).second;
 	shader.SetSource(src);
 	return shader.Compile();
 }
 
-GLShader* const GLProgram::GetShader(GLShader::Type shaderType)
+GLShader *const GLProgram::GetShader(GLShader::Type shaderType)
 {
 	auto result = m_shaders.find(shaderType);
-	if(result != m_shaders.cend())
+	if (result != m_shaders.cend())
 		return &(result->second);
 	return nullptr;
 }
@@ -61,9 +68,10 @@ int GLProgram::GetInfo(GLProgram::InfoType tp) const
 std::string GLProgram::GetInfoLog() const
 {
 	int length = GetInfo(GLProgram::InfoType::kInfoLogLength);
-	if(length < 1) return "";
+	if (length < 1)
+		return "";
 
-	char* infoLog = new char[length];
+	char *infoLog = new char[length];
 	glGetProgramInfoLog(m_id, length, NULL, infoLog);
 	glCheckError();
 	std::string log(infoLog);
@@ -74,7 +82,8 @@ std::string GLProgram::GetInfoLog() const
 
 bool GLProgram::Link(bool deleteShaders)
 {
-	if (m_linked) {
+	if (m_linked)
+	{
 		CC_LOG_ERROR("Cannot link a program that was already linked.\n");
 	}
 	CC_LOG_DEBUG("Linking program...\n");
@@ -101,42 +110,74 @@ bool GLProgram::Link(bool deleteShaders)
 
 	CC_LOG_DEBUG("  Program has {} shaders, attaching them...\n", m_shaders.size());
 
-	for (auto& shaderPair : m_shaders)
+	for (auto &shaderPair : m_shaders)
 	{
-		auto& shader = shaderPair.second;
+		auto &shader = shaderPair.second;
 		glAttachShader(m_id, shader.GetId());
 		glCheckError();
-		if(glGetError() != GL_NO_ERROR) CC_LOG_WARNING("Error attaching shader\n");
+		if (glGetError() != GL_NO_ERROR)
+			CC_LOG_WARNING("Error attaching shader\n");
 	}
 
 	glLinkProgram(m_id);
-	glCheckError();
+	if (GetInfo(GLProgram::InfoType::kLinkStatus) != GL_TRUE)
+	{
+		CC_LOG_ERROR("Failed to link glProgram");
+		glCheckError();
+		return false;
+	}
 
 	int success = GetInfo(InfoType::kLinkStatus);
-	if (success == GL_FALSE) {
+	if (success == GL_FALSE)
+	{
 		CC_LOG_ERROR("--> Error while compiling: {}\n", GetInfoLog());
 		return false;
 	}
+
+	glValidateProgram(m_id);
+	if (GetInfo(GLProgram::InfoType::kValidateStatus) != GL_TRUE)
+	{
+		CC_LOG_ERROR("GL Program did not validate, aborting.");
+		glCheckError();
+		return false;
+	}
+
 	m_linked = true;
 
 	if (m_linked && deleteShaders)
 	{
-		for (auto& shaderPair : m_shaders)
-		{
+		for (auto &shaderPair : m_shaders)
 			shaderPair.second.Delete();
-		}
 	}
-
-	glValidateProgram(m_id);
-	glCheckError();
-	CC_LOG_DEBUG("Program validated, log: {}\n", GetInfoLog());
 
 	return m_linked;
 }
 
 bool GLProgram::Use()
 {
-	if (!m_linked) if (!Link()) return false;
+	if (!m_linked)
+		if (!Link())
+			return false;
 	glUseProgram(m_id);
+	CC_LOG_INFO("Active uniforms:\n");
+	uint32_t num_uniforms = GetInfo(InfoType::kActiveUniforms);
+	GLenum type;
+	const GLsizei buffSize = 16;
+	GLsizei length;
+	GLchar name[buffSize];
+	GLsizei size;
+	for (uint32_t i = 0; i < num_uniforms; i++)
+	{
+		glGetActiveUniform(m_id, i, 16u, &length, &size, &type, name);
+		CC_LOG_INFO("Uniform #{} ({}): {}\n", i, type, name);
+	}
+	return true;
+}
+
+bool GLProgram::SetUniform(std::string const uniformName, Matrix44 const &value)
+{
+	int loc = glGetUniformLocation(m_id, uniformName.c_str());
+	glUniformMatrix4fv(loc, 1, GL_FALSE, value.data);
+	glCheckError();
 	return true;
 }

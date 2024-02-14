@@ -55,6 +55,8 @@ int Application::Run()
 		if (m_loop) status = m_loop(*this, std::chrono::duration_cast<std::chrono::duration<double>>(timeSinceStart).count());
 		if (status != 0) break;
 
+		// Update windows from their framebuffers
+
 		// Systems
 
 		loopDuration = std::chrono::high_resolution_clock::now() - now;
@@ -65,7 +67,7 @@ int Application::Run()
 inline bool Application::ShouldExit()
 {
 	bool allWindowsClosed = true;
-	for(auto i = 0; i < GetWindowsManager().NumWindows(); i++)
+	for(auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.WindowShouldClose(i));
 	if(allWindowsClosed) return true;
 	return false;
@@ -74,7 +76,7 @@ inline bool Application::ShouldExit()
 bool Application::Exit(int code)
 {
 	bool allWindowsClosed = true;
-	for(auto i = 0; i < GetWindowsManager().NumWindows(); i++)
+	for(auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.CloseWindow(i));
 	return allWindowsClosed;
 }
@@ -82,19 +84,19 @@ bool Application::Exit(int code)
 uint32_t const Application::NewWindow()
 {
 	m_windowsManager.NewWindow();
-	return static_cast<uint32_t>(m_windowsManager.NumWindows() - 1);
+	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
 }
 
 uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h)
 {
 	m_windowsManager.NewWindow(w, h);
-	return static_cast<uint32_t>(m_windowsManager.NumWindows() - 1);
+	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
 }
 
 uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const& title)
 {
 	m_windowsManager.NewWindow(w, h, title);
-	return static_cast<uint32_t>(m_windowsManager.NumWindows() - 1);
+	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
 }
 
 // bool Application::InitializeEngine()
