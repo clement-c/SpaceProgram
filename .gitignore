@@ -1,5 +1,6 @@
 build/**
 Engine/_External/fmt
-Engine/_External/glad
+Engine/_External/glad/src
+Engine/_External/glad/include
 Engine/_External/glfw
 Engine/_External/glm
