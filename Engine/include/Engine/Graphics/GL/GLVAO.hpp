@@ -34,7 +34,7 @@ public:
 	DLLEXPORT bool Bind() const;
 	DLLEXPORT bool Unbind() const;
 
-	DLLEXPORT bool Draw(DrawType, int first = 0, int length = 0) const;
+	DLLEXPORT bool Draw(DrawType, int first = 0, int length = -1) const;
 
 private:
 	size_t m_length;

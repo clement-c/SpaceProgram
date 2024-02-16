@@ -16,9 +16,9 @@ bool Engine::Initialize(Engine::InitOptions const &opts)
         return true;
 
     // Initialize
-    CC_LOG_DEBUG("Engine::Initialize(...): Initializing the renderer");
+    CC_LOG_DEBUG("Engine::Initialize(...): Initializing the renderer\n");
     // opts.target_renderer_api
-    CC_LOG_DEBUG("Engine::Initialize(...): Registering components");
+    CC_LOG_DEBUG("Engine::Initialize(...): Registering components\n");
     // opts.components_to_register
     // opts.components_groups_to_register
     // TODO: Use settings, for now registering only components needed for deliverable02

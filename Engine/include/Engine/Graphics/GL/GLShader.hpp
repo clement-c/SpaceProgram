@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "../../Core/Math/Matrix44.hpp"
+#include "../../Core/Maths/Matrix44.hpp"
 #include "../../Core/Lib.hpp"
 
 // #include <glm/glm.hpp>

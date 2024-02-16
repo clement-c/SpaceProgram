@@ -1,19 +1,23 @@
 #pragma once
+#include <filesystem>
 #include <functional>
 #include <string>
 #include <vector>
 
-#include "Lib.hpp"
-#include "WindowsManager.hpp"
-#include "../Engine.hpp"
+#include "Engine/Engine.hpp"
+#include "Engine/Core/Lib.hpp"
+#include "Engine/Core/WindowsManager.hpp"
 
 class Application
 {
 public:
 	using LoopType = std::function<int(Application&, double)>;
 
-	DLLEXPORT Application();
+	DLLEXPORT Application() = delete;
+	DLLEXPORT Application(int argc, char** argv);
 	DLLEXPORT ~Application() = default;
+
+	DLLEXPORT std::filesystem::path GetPath() const;
 
 	/**
 	 * @brief Set the main loop for the application
@@ -37,6 +41,8 @@ public:
 
 protected:
 	inline bool ShouldExit();
+
+	std::vector<std::string> m_args;
 
 	WindowsManager m_windowsManager;
 	LoopType m_loop;

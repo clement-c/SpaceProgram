@@ -7,15 +7,21 @@
 #include "Engine/Core/Application.hpp"
 #include "Engine/Core/Logging.hpp"
 
-
+namespace fs = std::filesystem;
 using namespace std::chrono_literals;
 
-
-Application::Application() : m_windowsManager{}, m_loop{} {
+Application::Application(int argc, char** argv) : m_windowsManager{}, m_loop{}
+{
 	if (!m_windowsManager.Initialize())
-	{
 		CC_LOG_ERROR("Could not initialize the windows manager, exiting.");
-	}
+	
+	for(int i = 0; i < argc; i++)
+		m_args.emplace_back(argv[i]);
+}
+
+std::filesystem::path Application::GetPath() const
+{
+	return fs::path(m_args[0]);
 }
 
 bool Application::SetLoop(LoopType loop)

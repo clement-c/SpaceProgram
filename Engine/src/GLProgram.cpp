@@ -150,6 +150,7 @@ bool GLProgram::Link(bool deleteShaders)
 			shaderPair.second.Delete();
 	}
 
+	CC_LOG_SUCCESS("GLProgram correctly linked.");
 	return m_linked;
 }
 
@@ -159,19 +160,26 @@ bool GLProgram::Use()
 		if (!Link())
 			return false;
 	glUseProgram(m_id);
-	CC_LOG_INFO("Active uniforms:\n");
-	uint32_t num_uniforms = GetInfo(InfoType::kActiveUniforms);
-	GLenum type;
-	const GLsizei buffSize = 16;
-	GLsizei length;
-	GLchar name[buffSize];
-	GLsizei size;
-	for (uint32_t i = 0; i < num_uniforms; i++)
-	{
-		glGetActiveUniform(m_id, i, 16u, &length, &size, &type, name);
-		CC_LOG_INFO("Uniform #{} ({}): {}\n", i, type, name);
-	}
 	return true;
+}
+
+int GLProgram::GetNumActiveUniforms() const
+{
+	if(glIsProgram(m_id))
+	{
+		return GetInfo(InfoType::kActiveUniforms);
+	}
+	return 0;
+}
+
+std::string GLProgram::GetUniformName(int index) const
+{
+	int out_length;
+	int size;
+	uint32_t type;
+	char name[256];
+	glGetActiveUniform(m_id, static_cast<uint32_t>(index), 32u, &out_length, &size, &type, name);
+	return std::string{name};
 }
 
 bool GLProgram::SetUniform(std::string const uniformName, Matrix44 const &value)

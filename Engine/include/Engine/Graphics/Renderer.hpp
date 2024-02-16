@@ -57,6 +57,4 @@ class Renderer
         return RendererImplements(api) && true; // TODO: implement checking support at runtime if api is implemented
     }
 
-    // void Render(Scene const *scene) const;
-
 };

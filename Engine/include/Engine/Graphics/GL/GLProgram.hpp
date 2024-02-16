@@ -36,6 +36,7 @@ public:
 	DLLEXPORT static std::string const DefaultFragmentSource;
 
 	DLLEXPORT GLProgram();
+	DLLEXPORT GLProgram(std::string_view vtxSource, std::string_view fragSource);
 
 	DLLEXPORT uint32_t GetId() const;
 	DLLEXPORT int GetInfo(InfoType) const;
@@ -52,6 +53,9 @@ public:
 	DLLEXPORT bool SetUniform(std::string const uniformName, double value); // GLShader::Type, 
 	DLLEXPORT bool SetUniform(std::string const uniformName, Matrix44 const& value); // GLShader::Type, 
 	// bool SetUniform(GLShader::Type, std::string const uniformName, glm::mat4 const&);
+
+	DLLEXPORT int GetNumActiveUniforms() const;
+	DLLEXPORT std::string GetUniformName(int index) const;
 
 private:
 	std::unordered_map<GLShader::Type, GLShader> m_shaders;

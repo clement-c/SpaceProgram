@@ -11,6 +11,8 @@ endif()
 option(BUILD_DOC "Build documentation" OFF)
 option(BUILD_TESTS "Build tests" ON)
 
+# add_compile_definitions(CC_LOG_LEVEL CC_SUCCESS_LEVEL)
+
 include(GNUInstallDirs)
 
 if(${BUILD_DOC})
@@ -40,6 +42,9 @@ message(STATUS "---- Building for ${CMAKE_BUILD_TYPE} ----")
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/../Install/${CMAKE_BUILD_TYPE}/")
 set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/share")
+
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(Engine)
 

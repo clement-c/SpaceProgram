@@ -9,9 +9,9 @@
 #include <Engine/Graphics/GL/GLBuffer.hpp>
 #include <Engine/Graphics/GL/GLVAO.hpp>
 
-int main()
+int main(int argc, char** argv)
 {
-    Application app;
+    Application app{argc, argv};
 
     // CC_LOG_INFO("Creating window...\n");
     auto const mainWindowId = app.NewWindow(1920, 1080, "OGLTriangleWindow");

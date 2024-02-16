@@ -95,7 +95,8 @@
 			"bitset": "cpp",
 			"condition_variable": "cpp",
 			"deque": "cpp",
-			"mutex": "cpp"
+			"mutex": "cpp",
+			"filesystem": "cpp"
 		}
 	}
 }

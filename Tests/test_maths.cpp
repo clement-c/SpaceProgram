@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <Engine/Core/Math/Vector3.hpp>
-#include <Engine/Core/Math/Matrix44.hpp>
+#include <Engine/Core/Maths/Vector3.hpp>
+#include <Engine/Core/Maths/Matrix44.hpp>
 
 
 /* ================== MATRIX44 ================== */

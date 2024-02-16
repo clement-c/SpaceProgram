@@ -5,6 +5,8 @@
 #include "Vector4.hpp"
 #include "Matrix33.hpp"
 
+#include "../Lib.hpp"
+
 struct Matrix44
 {
     static constexpr Matrix44 Identity()
@@ -22,6 +24,14 @@ struct Matrix44
             kZero, kOne, kZero, kZero,
             kZero, kZero, kOne, kZero,
             pos.x, pos.y, pos.z, pos.w};
+    }
+    static constexpr Matrix44 FromPosition(Scalar pos_x, Scalar pos_y, Scalar pos_z)
+    {
+        return {
+            kOne, kZero, kZero, kZero,
+            kZero, kOne, kZero, kZero,
+            kZero, kZero, kOne, kZero,
+            pos_x, pos_y, pos_z, kOne};
     }
 
     static Matrix44 AimMatrix(
@@ -139,7 +149,7 @@ struct Matrix44
     };
 };
 
-inline Matrix44 operator*(Matrix44 const &a, Matrix44 const &b) { return a.Multiply(b); }
+DLLEXPORT inline Matrix44 operator*(Matrix44 const &a, Matrix44 const &b) { return a.Multiply(b); }
 inline Matrix44 &operator*=(Matrix44 &a, Matrix44 const &b) { return a.MultiplyInPlace(b); }
 
 inline bool operator==(Matrix44 const &a, Matrix44 const &b) noexcept
