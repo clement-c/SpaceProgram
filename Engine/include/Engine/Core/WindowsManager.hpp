@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <tuple>
 #include <vector>
 #include <string>
@@ -7,6 +8,8 @@
 
 #include "Lib.hpp"
 
+
+struct Window;
 
 /**
  * @brief Class to manipulate windows in the engine
@@ -28,9 +31,9 @@ struct WindowsManager
 	 *
 	 * @return void* const
 	 */
-	DLLEXPORT void *const NewWindow();
-	DLLEXPORT void *const NewWindow(uint32_t const width, uint32_t const height);
-	DLLEXPORT void *const NewWindow(uint32_t const width, uint32_t const height, std::string const &title);
+	DLLEXPORT Window *const NewWindow();
+	DLLEXPORT Window *const NewWindow(uint32_t const width, uint32_t const height);
+	DLLEXPORT Window *const NewWindow(uint32_t const width, uint32_t const height, std::string const &title);
 
 	DLLEXPORT int GetNumMonitors() const;
 
@@ -46,6 +49,7 @@ struct WindowsManager
 
 	DLLEXPORT void ProcessEvents();
 
+	DLLEXPORT Window* GetWindow(size_t winId) const;
 	/**
 	 * @brief Change the title of a window
 	 *
@@ -68,6 +72,6 @@ struct WindowsManager
 	bool initialized = false;
 
 private:
-	std::vector<void*> m_windows;
+	std::vector<std::unique_ptr<Window>> m_windows;
 	bool m_gladInitialized = false;
 };

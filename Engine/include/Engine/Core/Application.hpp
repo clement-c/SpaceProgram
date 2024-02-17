@@ -32,7 +32,6 @@ public:
 
 	DLLEXPORT WindowsManager& GetWindowsManager();
 
-	// DLLEXPORT bool InitializeEngine();
 	DLLEXPORT Engine& GetEngine();
 
 	DLLEXPORT int Run();
@@ -42,6 +41,7 @@ public:
 protected:
 	inline bool ShouldExit();
 
+private:
 	std::vector<std::string> m_args;
 
 	WindowsManager m_windowsManager;

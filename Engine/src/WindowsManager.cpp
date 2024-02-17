@@ -1,9 +1,49 @@
 #include "Engine/Core/WindowsManager.hpp"
+#include "Engine/Core/Window.hpp"
 #include "Engine/Core/Logging.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
+Window::Window(GLFWwindow* ptr) : m_ptr{ptr} {
+	glfwSetWindowUserPointer(ptr, reinterpret_cast<void*>(this));
+}
+
+bool Window::SetTitle(std::string const& title)
+{
+	if(m_ptr) 
+	{
+		glfwSetWindowTitle(m_ptr, title.c_str());
+		return true;
+	}
+	return false;
+}
+
+bool Window::GetSize(int *width, int *height) const noexcept
+{
+	if(m_ptr)
+	{
+		glfwGetWindowSize(m_ptr, width, height);
+		return true;
+	}else{
+		return false;
+	}
+}
+
+GLFWwindow* Window::GlfwPtr()
+{
+	return m_ptr;
+}
+
+bool Window::SetCustomRenderFunction(RenderFunctionType&& function) noexcept
+{
+	m_render_function = function;
+	return true;
+}
+Window::RenderFunctionType Window::GetCustomRenderFunction() const noexcept
+{
+	return m_render_function;
+}
 
 class WindowsEventsManager
 {
@@ -94,26 +134,33 @@ void WindowsManager::ProcessEvents()
 	// If windows should close, close
 }
 
+Window* WindowsManager::GetWindow(size_t winId) const
+{
+	if(winId < 0 || winId < (m_windows.size() - 1))
+		return nullptr;
+	return m_windows.at(winId).get();
+}
+
 WindowsManager::operator bool()
 {
 	return initialized;
 }
 
-void* const WindowsManager::NewWindow()
+Window* const WindowsManager::NewWindow()
 {
 	// TODO: share resource if second window
 	auto* ptr = NewWindow(1280, 720, "Untitled");
 	return ptr;
 }
 
-void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h)
+Window* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h)
 {
 	// TODO: share resource if second window
 	auto* ptr = NewWindow(w, h, "Untitled window");
 	return ptr;
 }
 
-void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::string const& title)
+Window* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::string const& title)
 {
 	if (!initialized) if (!Initialize()) {
 		CC_LOG_ERROR("Could not initialize glfw in WindowsManager::NewWindow\n");
@@ -124,7 +171,7 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 	if (!ptr) return nullptr;
 
 	auto winId = m_windows.size();
-	m_windows.push_back(ptr);
+	m_windows.emplace_back(std::make_unique<Window>(ptr));
 
 	glfwMakeContextCurrent(ptr);
 
@@ -144,18 +191,18 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 		m_gladInitialized = true;
 	}
 
-	glfwSetKeyCallback(ptr, WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
-	glfwSetCharCallback(ptr, WindowsEventsManager::CharCallback);
-	glfwSetMouseButtonCallback(ptr, WindowsEventsManager::MouseButtonCallback);
-	glfwSetCursorPosCallback(ptr, WindowsEventsManager::CursorPosCallback);
-	glfwSetCursorEnterCallback(ptr, WindowsEventsManager::CursorEnterCallback);
-	glfwSetScrollCallback(ptr, WindowsEventsManager::ScrollCallback);
-	glfwSetDropCallback(ptr, WindowsEventsManager::DropCallback);
-	glfwSetWindowPosCallback(ptr, WindowsEventsManager::WindowPosCallback);
-	glfwSetWindowSizeCallback(ptr, WindowsEventsManager::WindowSizeCallback);
-	glfwSetWindowCloseCallback(ptr, WindowsEventsManager::WindowCloseCallback);
+	// glfwSetKeyCallback(ptr, [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); }); //WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
+	// glfwSetCharCallback(ptr, WindowsEventsManager::CharCallback);
+	// glfwSetMouseButtonCallback(ptr, WindowsEventsManager::MouseButtonCallback);
+	// glfwSetCursorPosCallback(ptr, WindowsEventsManager::CursorPosCallback);
+	// glfwSetCursorEnterCallback(ptr, WindowsEventsManager::CursorEnterCallback);
+	// glfwSetScrollCallback(ptr, WindowsEventsManager::ScrollCallback);
+	// glfwSetDropCallback(ptr, WindowsEventsManager::DropCallback);
+	// glfwSetWindowPosCallback(ptr, WindowsEventsManager::WindowPosCallback);
+	// glfwSetWindowSizeCallback(ptr, WindowsEventsManager::WindowSizeCallback);
+	// glfwSetWindowCloseCallback(ptr, WindowsEventsManager::WindowCloseCallback);
 
-	return ptr;
+	return m_windows.at(winId).get();
 }
 
 int WindowsManager::GetNumMonitors() const
@@ -175,7 +222,7 @@ bool WindowsManager::MakeWindowCurrent(size_t winId) const
 {
 	if(winId < GetNumWindows())
 	{
-		glfwMakeContextCurrent((GLFWwindow*)m_windows.at(winId));
+		glfwMakeContextCurrent(m_windows.at(winId)->GlfwPtr());
 		return true;
 	}
 	return false;
@@ -184,7 +231,7 @@ bool WindowsManager::MakeWindowCurrent(size_t winId) const
 
 bool WindowsManager::SwapBuffers(size_t winId) const
 {
-	glfwSwapBuffers((GLFWwindow*)m_windows.at(winId));
+	glfwSwapBuffers(m_windows.at(winId)->GlfwPtr());
 	return true;
 }
 
@@ -193,7 +240,7 @@ bool WindowsManager::CloseWindow(size_t winId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		glfwSetWindowShouldClose((GLFWwindow*)m_windows.at(winId), GLFW_TRUE);
+		glfwSetWindowShouldClose(m_windows.at(winId)->GlfwPtr(), GLFW_TRUE);
 		return true;
 	}
 	return true;
@@ -204,7 +251,7 @@ bool WindowsManager::WindowShouldClose(size_t winId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		return glfwWindowShouldClose((GLFWwindow*)m_windows.at(winId));
+		return glfwWindowShouldClose(m_windows.at(winId)->GlfwPtr());
 	}
 	else return false;
 }
@@ -214,7 +261,7 @@ bool WindowsManager::SetWindowTitle(size_t winId, std::string const& title) cons
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		glfwSetWindowTitle((GLFWwindow*)m_windows.at(winId), title.c_str());
+		glfwSetWindowTitle(m_windows.at(winId)->GlfwPtr(), title.c_str());
 		return true;
 	}
 	else return false;
@@ -222,7 +269,7 @@ bool WindowsManager::SetWindowTitle(size_t winId, std::string const& title) cons
 
 bool WindowsManager::SetWindowFullscreen(size_t winId, bool, uint8_t screenId) const
 {
-	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
+	if (winId < m_windows.size() && m_windows.at(winId)->GlfwPtr() != nullptr)
 	{
 		CC_LOG_ERROR("SetWindowFullscreen is not implemented yet.");
 		return true;
@@ -234,7 +281,7 @@ bool WindowsManager::SetWindowSize(size_t winId, uint32_t w, uint32_t h) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		glfwSetWindowSize((GLFWwindow*)m_windows.at(winId), w, h);
+		glfwSetWindowSize(m_windows.at(winId)->GlfwPtr(), w, h);
 		return true;
 	}
 	else return false;
@@ -254,7 +301,7 @@ bool WindowsManager::CenterWindow(uint32_t winId, uint8_t screenId) const
 			return false;
 		}
 
-		GLFWwindow* window = (GLFWwindow*)m_windows.at(winId);
+		GLFWwindow* window = m_windows.at(winId)->GlfwPtr();
 
 		int mx, my, mw, mh;
 		glfwGetMonitorWorkarea(monitor, &mx, &my, &mw, &mh);
@@ -271,7 +318,7 @@ bool WindowsManager::SetWindowTopLeftCorner(size_t winId, uint32_t x, uint32_t y
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		GLFWwindow* window = (GLFWwindow*)m_windows.at(winId);
+		GLFWwindow* window = m_windows.at(winId)->GlfwPtr();
 		glfwSetWindowPos(window, x, y);
 		return true;
 	}

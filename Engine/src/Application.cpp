@@ -6,16 +6,17 @@
 
 #include "Engine/Core/Application.hpp"
 #include "Engine/Core/Logging.hpp"
+#include "Engine/Core/Window.hpp"
 
 namespace fs = std::filesystem;
 using namespace std::chrono_literals;
 
-Application::Application(int argc, char** argv) : m_windowsManager{}, m_loop{}
+Application::Application(int argc, char **argv) : m_windowsManager{}, m_loop{}
 {
 	if (!m_windowsManager.Initialize())
 		CC_LOG_ERROR("Could not initialize the windows manager, exiting.");
-	
-	for(int i = 0; i < argc; i++)
+
+	for (int i = 0; i < argc; i++)
 		m_args.emplace_back(argv[i]);
 }
 
@@ -32,7 +33,8 @@ bool Application::SetLoop(LoopType loop)
 
 int Application::Run()
 {
-	if (!m_windowsManager.initialized) return 1;
+	if (!m_windowsManager.initialized)
+		return 1;
 
 	int status = 0;
 	auto startTime = std::chrono::high_resolution_clock::now();
@@ -42,7 +44,7 @@ int Application::Run()
 	auto timeSinceStart = std::chrono::duration_cast<std::chrono::nanoseconds>(now - startTime);
 	auto loopDuration = now - prevTime;
 
-	std::chrono::duration<double, std::nano> aimDuration(1.0f/60.0f);
+	std::chrono::duration<double, std::nano> aimDuration(1.0f / 60.0f);
 
 	// Renderer renderer;
 	while (!ShouldExit())
@@ -58,10 +60,33 @@ int Application::Run()
 		m_windowsManager.ProcessEvents();
 
 		// Run gameplay loop
-		if (m_loop) status = m_loop(*this, std::chrono::duration_cast<std::chrono::duration<double>>(timeSinceStart).count());
-		if (status != 0) break;
+		if (m_loop)
+			status = m_loop(*this, std::chrono::duration_cast<std::chrono::duration<double>>(timeSinceStart).count());
+		if (status != 0)
+			break;
 
-		// Update windows from their framebuffers
+		// Render windows
+		for (auto win_id = 0; win_id < m_windowsManager.GetNumWindows(); win_id++)
+		{
+			// CC_LOG_DEBUG("Checking whether window #{} has a custom render function\n", win_id);
+			auto *window = m_windowsManager.GetWindow(win_id);
+			if(window)
+			{
+				// CC_LOG_DEBUG("  Window #{} exists\n", win_id);
+				m_windowsManager.MakeWindowCurrent(win_id);
+				if (window->GetCustomRenderFunction())
+				{
+					// CC_LOG_DEBUG("  Window #{} has a custom render function\n", win_id);
+					window->GetCustomRenderFunction()(*window);
+				}
+				else
+				{
+					// CC_LOG_DEBUG("  Window #{} DOESN'T have a custom render function\n", win_id);
+					// standard rendering
+				}
+				m_windowsManager.SwapBuffers(win_id);
+			}
+		}
 
 		// Systems
 
@@ -73,16 +98,17 @@ int Application::Run()
 inline bool Application::ShouldExit()
 {
 	bool allWindowsClosed = true;
-	for(auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
+	for (auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.WindowShouldClose(i));
-	if(allWindowsClosed) return true;
+	if (allWindowsClosed)
+		return true;
 	return false;
 }
 
 bool Application::Exit(int code)
 {
 	bool allWindowsClosed = true;
-	for(auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
+	for (auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.CloseWindow(i));
 	return allWindowsClosed;
 }
@@ -99,7 +125,7 @@ uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h)
 	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
 }
 
-uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const& title)
+uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
 {
 	m_windowsManager.NewWindow(w, h, title);
 	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
@@ -111,9 +137,9 @@ uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::s
 // 	return m_engine.IsInitialized();
 // }
 
-Engine& Application::GetEngine()
+Engine &Application::GetEngine()
 {
 	return m_engine;
 }
 
-WindowsManager& Application::GetWindowsManager() { return m_windowsManager; }
+WindowsManager &Application::GetWindowsManager() { return m_windowsManager; }

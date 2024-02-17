@@ -58,13 +58,26 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // Open a new window and center it
-    uint32_t wind_id = app.NewWindow(1920, 1080, "02_GLSphere");
-    app.GetWindowsManager().CenterWindow(wind_id);
-    app.GetWindowsManager().MakeWindowCurrent(wind_id);
+    int const WIN_WIDTH = 1920, WIN_HEIGHT = 1080;
 
-    glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_MULTISAMPLE);
+    // Open a new window and center it
+    uint32_t win_id = app.NewWindow(WIN_WIDTH, WIN_HEIGHT, "02_GLSphere");
+    app.GetWindowsManager().CenterWindow(win_id);
+    app.GetWindowsManager().MakeWindowCurrent(win_id);
+
+    // Initialise camera
+
+    Matrix44 model = Matrix44::Identity();
+    auto loop = [&model](Application &app, double timeSec) -> int
+    {
+        model = Matrix33::RotationY(static_cast<float>(timeSec));
+        return 0;
+    };
+    app.SetLoop(loop);
+
+    // CUTSOM RENDERING IN THE MAIN WINDOW
+
+    auto *window = app.GetWindowsManager().GetWindow(win_id);
 
     // Create the OpenGL program
     GLProgram gl_program;
@@ -73,44 +86,43 @@ int main(int argc, char **argv)
     if (!gl_program.Link()) // Compile and link, use - log errors if any
         return -1;
 
-    // Initialise camera
-    Camera camera(1920.0/1080.0);
-
-    GLBuffer vbo(GLBuffer::Type::kArrayBuffer);
-    vbo.SetData(Icosphere, sizeof(Icosphere), GL_STATIC_DRAW);
-
     // Register the buffers and their layouts in a VAO
-    int padding = (int)(8 * sizeof(float));
+    GLBuffer vbo(GLBuffer::Type::kArrayBuffer);
+    if (!vbo.SetData(Icosphere, sizeof(Icosphere), GL_STATIC_DRAW))
+        return -1;
     GLVAO vao_icosphere(vbo, {
-        {0, {3, GL_FLOAT, false, padding, (void *)(0)}},                 // pos
-        {1, {2, GL_FLOAT, false, padding, (void *)(3 * sizeof(float))}}, // texture_coord
-        {2, {3, GL_FLOAT, true, padding, (void *)(5 * sizeof(float))}}   // normal
-    });
-    glViewport(0, 0, 1920, 1080);
+                                 {0, {3, GL_FLOAT, false, (int)(8 * sizeof(float)), (void *)(0)}},                 // pos
+                                 {1, {2, GL_FLOAT, false, (int)(8 * sizeof(float)), (void *)(3 * sizeof(float))}}, // texture_coord
+                                 {2, {3, GL_FLOAT, true, (int)(8 * sizeof(float)), (void *)(5 * sizeof(float))}}   // normal
+                             });
+    Camera camera;
+    window->SetCustomRenderFunction(
+        [&gl_program, &camera, &model, &vao_icosphere](Window const &window) -> bool
+        {
+            int width, height;
 
-    auto loop = [&vao_icosphere, &camera, &gl_program](Application &app, double timeSec) -> int
-    {
-        Matrix44 model = Matrix33::RotationY(static_cast<float>(timeSec));
+            auto view = Matrix44::FromPosition(0.f, .0f, -7.0f);
 
-        auto view = Matrix44::FromPosition(0.f, .0f, -9.0f);
+            glEnable(GL_DEPTH_TEST);
 
-        // app.GetWindowsManager().MakeWindowCurrent(0);
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f); //((sin(timeSec) * 0.5 + 0.5), 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        gl_program.Use();
+            if (window.GetSize(&width, &height))
+            {
+                glViewport(0, 0, width, height);
+                camera.SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
+            }
+            glClearColor(0.2f, 0.2f, 0.2f, 1.0f); //((sin(timeSec) * 0.5 + 0.5), 0.0, 0.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            gl_program.Use();
 
-        // Set mesh transform in the shader
-        if (!gl_program.SetUniform("model", model) ||
-            !gl_program.SetUniform("projection", camera.GetProjectionMatrix()) ||
-            !gl_program.SetUniform("view", view))
-            return -1;
+            // Set mesh transform in the shader
+            if (!gl_program.SetUniform("model", model) ||
+                !gl_program.SetUniform("projection", camera.GetProjectionMatrix()) ||
+                !gl_program.SetUniform("view", view))
+                return false;
 
-        vao_icosphere.Draw(GLVAO::DrawType::kTriangles);
-        app.GetWindowsManager().SwapBuffers();
-
-        return 0;
-    };
-    app.SetLoop(loop);
+            vao_icosphere.Draw(GLVAO::DrawType::kTriangles);
+            return true;
+        });
 
     // auto renderLoop = [](Window& window, Engine& engine) -> bool
 
