@@ -8,6 +8,7 @@
 #include "Engine/Core/Maths/Constants.hpp"
 
 // TEMP:
+// #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -17,13 +18,48 @@ Camera::Camera(float fov, float nearPlane, float farPlane, float aspectRatio) : 
 {
 }
 
+float Camera::GetFOV() { return m_fov; }
+Camera &Camera::SetFOV(float fov_degrees)
+{
+    m_fov = fov_degrees;
+    m_dirtyProjection = true;
+    return *this;
+}
+float Camera::GetNearPlane() { return m_nearPlane; }
+Camera &Camera::SetNearPlane(float near_plane)
+{
+    m_nearPlane = near_plane;
+    m_dirtyProjection = true;
+    return *this;
+}
+float Camera::GetFarPlane() { return m_farPlane; }
+Camera &Camera::SetFarPlane(float far_plane)
+{
+    m_farPlane = far_plane;
+    m_dirtyProjection = true;
+    return *this;
+}
+float Camera::GetAspectRatio() { return m_aspectRatio; }
+Camera &Camera::SetAspectRatio(float aspect_ratio)
+{
+    m_aspectRatio = aspect_ratio;
+    m_dirtyProjection = true;
+    return *this;
+}
+
 Matrix44 Camera::GetProjectionMatrix()
 {
-    // if(m_dirtyProjection)
-    // {
-    auto persp = glm::perspective(glm::radians(m_fov), 1920.0f/1080.0f, 0.1f, 100.0f);
-    m_projectionMatrix = *(Matrix44*)(&persp);
-    // }
+    if (m_dirtyProjection)
+    {
+        float const tan_half_fov = tan(m_fov / 2.0f);
+
+        m_projectionMatrix = Matrix44::Identity();
+        m_projectionMatrix[0][0] = 1.0f / (m_aspectRatio * tan_half_fov);
+        m_projectionMatrix[1][1] = 1.0f / (tan_half_fov);
+        m_projectionMatrix[2][2] = -(m_farPlane + m_nearPlane) / (m_farPlane - m_nearPlane);
+        m_projectionMatrix[2][3] = -1.0f;
+        m_projectionMatrix[3][2] = -(2.0f * m_farPlane * m_nearPlane) / (m_farPlane - m_nearPlane);
+    }
     return m_projectionMatrix;
 }
 

@@ -81,6 +81,7 @@ bool WindowsManager::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	CC_LOG_DEBUG(" ... initializing glfw SUCCEEDED\n");
 	return true;
@@ -119,7 +120,7 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 	}
 
 	// TODO: share resource if second window
-	auto* ptr = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
+	GLFWwindow* ptr = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
 	if (!ptr) return nullptr;
 
 	auto winId = m_windows.size();
@@ -143,7 +144,7 @@ void* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::s
 		m_gladInitialized = true;
 	}
 
-	glfwSetKeyCallback(ptr, [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
+	glfwSetKeyCallback(ptr, WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
 	glfwSetCharCallback(ptr, WindowsEventsManager::CharCallback);
 	glfwSetMouseButtonCallback(ptr, WindowsEventsManager::MouseButtonCallback);
 	glfwSetCursorPosCallback(ptr, WindowsEventsManager::CursorPosCallback);
@@ -275,9 +276,4 @@ bool WindowsManager::SetWindowTopLeftCorner(size_t winId, uint32_t x, uint32_t y
 		return true;
 	}
 	else return false;
-}
-
-void* WindowsManager::GetProcAddress()
-{
-	return (void*)glfwGetProcAddress;
 }

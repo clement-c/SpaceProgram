@@ -7,8 +7,7 @@
 class GLVAO
 {
 public:
-
-	using AttribPointerType = std::tuple<GLBuffer&, int /* data size 1/2/3/4 */, int /* gl type */, bool /* normalize */, int /* total size */, void* /* offset */>;
+	using AttribPointerType = std::tuple<int /* data size 1/2/3/4 */, int /* gl type */, bool /* normalize */, int /* total size */, void * /* offset */>;
 
 	enum class DrawType
 	{
@@ -27,8 +26,16 @@ public:
 	};
 
 	DLLEXPORT GLVAO() = delete;
-	DLLEXPORT GLVAO(GLVAO const&) = delete;
-	DLLEXPORT GLVAO(std::map<int, AttribPointerType> const&);
+	DLLEXPORT GLVAO(GLVAO const &) = delete;
+	/**
+	 * @brief Creates a VAO from a GL Buffer and a description of attributes
+	 * 		  (as used iun the glVertexAttribPointer function) per layout index
+	 * 
+	 * @param buffer 	Buffer containing the data for the vertices
+	 * @param attributesLayout 	Lists the layout for each attribute. 
+	 * 							The map key (int) should be the same than the `layout=key` in the vertex shader
+	 */
+	DLLEXPORT GLVAO(GLBuffer &buffer, std::map<int, AttribPointerType> const & attributesLayout);
 
 	DLLEXPORT uint32_t GetId() const;
 	DLLEXPORT bool Bind() const;

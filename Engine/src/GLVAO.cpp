@@ -5,7 +5,7 @@
 
 #include "checkError.hpp"
 
-GLVAO::GLVAO(std::map<int, AttribPointerType> const& attribs)
+GLVAO::GLVAO(GLBuffer& buffer, std::map<int, AttribPointerType> const& attribs)
 {
 	m_length = 0;
 	glGenVertexArrays(1, &m_id);
@@ -15,13 +15,12 @@ GLVAO::GLVAO(std::map<int, AttribPointerType> const& attribs)
 	for (auto& idAttrib : attribs)
 	{
 		auto& tup = idAttrib.second;
-		auto& buffer = std::get<0>(tup);
-		auto data_size = std::get<1>(tup);
+		auto data_size = std::get<0>(tup);
 		m_length = (buffer.GetNumComponents() / data_size);
-		auto gl_type = std::get<2>(tup);
-		bool normalize = std::get<3>(tup);
-		auto total_size = std::get<4>(tup);
-		auto offset = std::get<5>(tup);
+		auto gl_type = std::get<1>(tup);
+		bool normalize = std::get<2>(tup);
+		auto total_size = std::get<3>(tup);
+		auto offset = std::get<4>(tup);
 
 		buffer.Bind();
 		glVertexAttribPointer(idAttrib.first, data_size, gl_type, normalize, total_size, offset);

@@ -1,8 +1,6 @@
 #include "Engine/Engine.hpp"
 #include "Engine/Core/Logging.hpp"
 #include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 Engine::InitOptions const Engine::kDefaultInitOptions{};
 

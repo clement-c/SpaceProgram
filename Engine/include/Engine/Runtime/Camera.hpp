@@ -11,6 +11,16 @@ public:
     DLLEXPORT Camera(float aspectRatio);
     DLLEXPORT Camera(float fov, float nearPlane, float farPlane, float aspectRatio);
 
+	// Projection attributes
+	DLLEXPORT float GetFOV();
+	DLLEXPORT Camera& SetFOV(float fov_degrees);
+	DLLEXPORT float GetNearPlane();
+	DLLEXPORT Camera& SetNearPlane(float near_plane);
+	DLLEXPORT float GetFarPlane();
+	DLLEXPORT Camera& SetFarPlane(float far_plane);
+	DLLEXPORT float GetAspectRatio();
+	DLLEXPORT Camera& SetAspectRatio(float aspect_ratio);
+
 	DLLEXPORT Matrix44 GetProjectionMatrix();
 
 	DLLEXPORT void SetViewMatrix(Matrix44 const& mat);

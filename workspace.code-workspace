@@ -96,7 +96,13 @@
 			"condition_variable": "cpp",
 			"deque": "cpp",
 			"mutex": "cpp",
-			"filesystem": "cpp"
+			"filesystem": "cpp",
+			"numeric": "cpp",
+			"queue": "cpp",
+			"ranges": "cpp",
+			"source_location": "cpp",
+			"span": "cpp",
+			"stack": "cpp"
 		}
 	}
 }

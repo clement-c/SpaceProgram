@@ -7,6 +7,7 @@
 
 #include "Lib.hpp"
 
+
 /**
  * @brief Class to manipulate windows in the engine
  *
@@ -16,7 +17,7 @@ struct WindowsManager
 	WindowsManager();
 	~WindowsManager();
 
-	DLLEXPORT static void *GetProcAddress();
+	// DLLEXPORT static void *GetProcAddress();
 
 	DLLEXPORT operator bool();
 
@@ -67,7 +68,6 @@ struct WindowsManager
 	bool initialized = false;
 
 private:
-	std::vector<void *> m_windows;
-	std::vector<void *> m_surfaces;
+	std::vector<void*> m_windows;
 	bool m_gladInitialized = false;
 };

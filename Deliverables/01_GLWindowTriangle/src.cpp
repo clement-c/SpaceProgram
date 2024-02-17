@@ -16,7 +16,6 @@ int main(int argc, char** argv)
     // CC_LOG_INFO("Creating window...\n");
     auto const mainWindowId = app.NewWindow(1920, 1080, "OGLTriangleWindow");
     WindowsManager& winManager = app.GetWindowsManager();
-    // auto version = gladLoadGL((GLADloadfunc)winManager.GetProcAddress());
     winManager.CenterWindow(mainWindowId);
     winManager.MakeWindowCurrent(mainWindowId);
 
@@ -30,8 +29,8 @@ int main(int argc, char** argv)
     vbo.SetData(vertData, sizeof(vertData), GL_STATIC_DRAW);
 
     // Register the buffers and their layouts in a VAO
-    GLVAO triangleVAO({
-        { 0, {vbo, 3, GL_FLOAT, false, (int)(3 * sizeof(float)), (void*)(0)} }
+    GLVAO triangleVAO(vbo, {
+        { 0, {3, GL_FLOAT, false, (int)(3 * sizeof(float)), (void*)(0)} }
     });
 
     GLProgram program;
