@@ -13,11 +13,17 @@ using namespace std::chrono_literals;
 
 Application::Application(int argc, char **argv) : m_windowsManager{}, m_loop{}
 {
-	if (!m_windowsManager.Initialize())
-		CC_LOG_ERROR("Could not initialize the windows manager, exiting.");
-
 	for (int i = 0; i < argc; i++)
 		m_args.emplace_back(argv[i]);
+
+	// IF UI
+
+	if (!m_windowsManager.Initialize())
+	{
+		CC_LOG_ERROR("Could not initialize the windows manager, exiting.");
+		return;
+	}
+
 }
 
 std::filesystem::path Application::GetPath() const
@@ -33,35 +39,32 @@ bool Application::SetLoop(LoopType loop)
 
 int Application::Run()
 {
-	if (!m_windowsManager.initialized)
-		return 1;
-
 	int status = 0;
-	auto startTime = std::chrono::high_resolution_clock::now();
-	auto now = startTime;
-	auto prevTime = startTime;
 
-	auto timeSinceStart = std::chrono::duration_cast<std::chrono::nanoseconds>(now - startTime);
-	auto loopDuration = now - prevTime;
+	auto start_time = std::chrono::high_resolution_clock::now();
+	auto now = start_time;
 
-	std::chrono::duration<double, std::nano> aimDuration(1.0f / 60.0f);
+	auto time_since_start = std::chrono::duration_cast<std::chrono::nanoseconds>(now - start_time);
+
+	std::chrono::duration<double, std::nano> loop_duration{0.0};
+	std::chrono::duration<double, std::nano> target_duration(1.0f / 60.0f);
 
 	// Renderer renderer;
 	while (!ShouldExit())
 	{
 		// Match target fps
-		std::this_thread::sleep_for(aimDuration - loopDuration);
+		std::this_thread::sleep_for(target_duration - loop_duration);
 
 		// Update time for start of loop
 		now = std::chrono::high_resolution_clock::now();
-		timeSinceStart = std::chrono::duration_cast<std::chrono::nanoseconds>(now - startTime);
+		time_since_start = std::chrono::duration_cast<std::chrono::nanoseconds>(now - start_time);
 
 		// Processing events
 		m_windowsManager.ProcessEvents();
 
 		// Run gameplay loop
 		if (m_loop)
-			status = m_loop(*this, std::chrono::duration_cast<std::chrono::duration<double>>(timeSinceStart).count());
+			status = m_loop(*this, std::chrono::duration_cast<std::chrono::duration<double>>(time_since_start).count());
 		if (status != 0)
 			break;
 
@@ -70,27 +73,17 @@ int Application::Run()
 		{
 			// CC_LOG_DEBUG("Checking whether window #{} has a custom render function\n", win_id);
 			auto *window = m_windowsManager.GetWindow(win_id);
-			if(window)
+			if (window)
 			{
-				// CC_LOG_DEBUG("  Window #{} exists\n", win_id);
 				m_windowsManager.MakeWindowCurrent(win_id);
-				if (window->GetCustomRenderFunction())
-				{
-					// CC_LOG_DEBUG("  Window #{} has a custom render function\n", win_id);
-					window->GetCustomRenderFunction()(*window);
-				}
-				else
-				{
-					// CC_LOG_DEBUG("  Window #{} DOESN'T have a custom render function\n", win_id);
-					// standard rendering
-				}
+				// Render
+				window->GetRenderer().Render();
 				m_windowsManager.SwapBuffers(win_id);
 			}
 		}
 
 		// Systems
-
-		loopDuration = std::chrono::high_resolution_clock::now() - now;
+		loop_duration = std::chrono::high_resolution_clock::now() - now;
 	}
 	return status;
 }
@@ -113,33 +106,27 @@ bool Application::Exit(int code)
 	return allWindowsClosed;
 }
 
-uint32_t const Application::NewWindow()
+Window* const Application::NewWindow()
 {
-	m_windowsManager.NewWindow();
-	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
+	return m_windowsManager.NewWindow();
 }
 
-uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h)
+Window* const Application::NewWindow(uint32_t const w, uint32_t const h)
 {
-	m_windowsManager.NewWindow(w, h);
-	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
+	return m_windowsManager.NewWindow(w, h);
 }
 
-uint32_t const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
+Window* const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
 {
-	m_windowsManager.NewWindow(w, h, title);
-	return static_cast<uint32_t>(m_windowsManager.GetNumWindows() - 1);
+	return m_windowsManager.NewWindow(w, h, title);
 }
 
-// bool Application::InitializeEngine()
-// {
-// 	m_engine.Initialize();
-// 	return m_engine.IsInitialized();
-// }
+WindowsManager &Application::GetWindowsManager()
+{
+	return m_windowsManager;
+}
 
 Engine &Application::GetEngine()
 {
 	return m_engine;
 }
-
-WindowsManager &Application::GetWindowsManager() { return m_windowsManager; }

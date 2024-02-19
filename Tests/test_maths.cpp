@@ -3,10 +3,10 @@
 #include <Engine/Core/Maths/Vector3.hpp>
 #include <Engine/Core/Maths/Matrix44.hpp>
 
-
 /* ================== MATRIX44 ================== */
 
-TEST(Core_Maths, Matrix44_Init) {
+TEST(Core_Maths, Matrix44_Init)
+{
 
     // Default initialization = Identity matrix
     Matrix44 mat;
@@ -32,8 +32,7 @@ TEST(Core_Maths, Matrix44_Init) {
         static_cast<Scalar>(0.0), static_cast<Scalar>(1.0), static_cast<Scalar>(2.0), static_cast<Scalar>(3.0),
         static_cast<Scalar>(4.0), static_cast<Scalar>(5.0), static_cast<Scalar>(6.0), static_cast<Scalar>(7.0),
         static_cast<Scalar>(8.0), static_cast<Scalar>(9.0), static_cast<Scalar>(10.0), static_cast<Scalar>(11.0),
-        static_cast<Scalar>(12.0), static_cast<Scalar>(13.0), static_cast<Scalar>(14.0), static_cast<Scalar>(15.0)
-    };
+        static_cast<Scalar>(12.0), static_cast<Scalar>(13.0), static_cast<Scalar>(14.0), static_cast<Scalar>(15.0)};
 
     EXPECT_EQ(matA.a00, static_cast<Scalar>(0.0));
     EXPECT_EQ(matA.a01, static_cast<Scalar>(1.0));
@@ -57,8 +56,7 @@ TEST(Core_Maths, Matrix44_Init) {
         Vector4{static_cast<Scalar>(10.0), static_cast<Scalar>(11.0), static_cast<Scalar>(12.0), static_cast<Scalar>(13.0)},
         Vector4{static_cast<Scalar>(14.0), static_cast<Scalar>(15.0), static_cast<Scalar>(16.0), static_cast<Scalar>(17.0)},
         Vector4{static_cast<Scalar>(18.0), static_cast<Scalar>(19.0), static_cast<Scalar>(20.0), static_cast<Scalar>(21.0)},
-        Vector4{static_cast<Scalar>(22.0), static_cast<Scalar>(23.0), static_cast<Scalar>(24.0), static_cast<Scalar>(25.0)}
-    };
+        Vector4{static_cast<Scalar>(22.0), static_cast<Scalar>(23.0), static_cast<Scalar>(24.0), static_cast<Scalar>(25.0)}};
     EXPECT_EQ(matB.a00, static_cast<Scalar>(10.0));
     EXPECT_EQ(matB.a01, static_cast<Scalar>(11.0));
     EXPECT_EQ(matB.a02, static_cast<Scalar>(12.0));
@@ -115,14 +113,14 @@ TEST(Core_Maths, Matrix44_Init) {
     EXPECT_EQ(matD.a33, static_cast<Scalar>(25.0));
 }
 
-TEST(Core_Maths, Matrix44_Equality) {
+TEST(Core_Maths, Matrix44_Equality)
+{
     Matrix44 mat;
     Matrix44 identity = {
         kOne, kZero, kZero, kZero,
         kZero, kOne, kZero, kZero,
         kZero, kZero, kOne, kZero,
-        kZero, kZero, kZero, kOne
-    };
+        kZero, kZero, kZero, kOne};
 
     EXPECT_TRUE(mat == identity);
     EXPECT_EQ(mat, identity);
@@ -131,64 +129,64 @@ TEST(Core_Maths, Matrix44_Equality) {
         static_cast<Scalar>(0.0), static_cast<Scalar>(1.0), static_cast<Scalar>(2.0), static_cast<Scalar>(3.0),
         static_cast<Scalar>(4.0), static_cast<Scalar>(5.0), static_cast<Scalar>(6.0), static_cast<Scalar>(7.0),
         static_cast<Scalar>(8.0), static_cast<Scalar>(9.0), static_cast<Scalar>(10.0), static_cast<Scalar>(11.0),
-        static_cast<Scalar>(12.0), static_cast<Scalar>(13.0), static_cast<Scalar>(14.0), static_cast<Scalar>(15.0)
-    };
+        static_cast<Scalar>(12.0), static_cast<Scalar>(13.0), static_cast<Scalar>(14.0), static_cast<Scalar>(15.0)};
     auto matB{matA};
     EXPECT_EQ(matA, matB);
 }
 
-TEST(Core_Maths, Matrix44_FromPosition) {
+TEST(Core_Maths, Matrix44_FromPosition)
+{
     Vector4 vec{2.0, 3.0, 4.0, 5.0};
     Matrix44 matA = Matrix44::FromPosition(Vector4(2.0, 3.0, 4.0, 5.0));
     Matrix44 matB{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 3.0, 4.0, 5.0};
     EXPECT_EQ(matA, matB);
 }
 
-TEST(Core_Maths, Matrix44_AimMatrix) {
+TEST(Core_Maths, Matrix44_AimMatrix)
+{
     Vector4 src{8.2, 3.5, -2.2};
     Vector4 tgt{2.65, -0.56, 5.9};
     Matrix44 a = Matrix44::AimMatrix(src, tgt);
-    Matrix44 b {-0.522340298, -0.38210839, 0.762334526, 0.0, -0.21597968, 0.924117565, 0.315213591, 0.0, -0.824932396, 0, -0.565231442, 0.0, 8.19999981, 3.5, -2.20000005, 1.0};
+    Matrix44 b{-0.522340298, -0.38210839, 0.762334526, 0.0, -0.21597968, 0.924117565, 0.315213591, 0.0, -0.824932396, 0, -0.565231442, 0.0, 8.19999981, 3.5, -2.20000005, 1.0};
     EXPECT_EQ(a, b);
 }
 
-
-
 // ===================== VECTOR3 ================== //
 
-TEST(Core_Maths, Vec3_Init) {
-  Vector3 vec;
-  EXPECT_EQ(vec.x, 0.0);
-  EXPECT_EQ(vec.y, 0.0);
-  EXPECT_EQ(vec.z, 0.0);
+TEST(Core_Maths, Vec3_Init)
+{
+    Vector3 vec;
+    EXPECT_EQ(vec.x, 0.0);
+    EXPECT_EQ(vec.y, 0.0);
+    EXPECT_EQ(vec.z, 0.0);
 
-  auto vec_x = Vector3::X();
-  EXPECT_EQ(vec_x.x, 1.0);
-  EXPECT_EQ(vec_x.y, 0.0);
-  EXPECT_EQ(vec_x.z, 0.0);
+    auto vec_x = Vector3::X();
+    EXPECT_EQ(vec_x.x, 1.0);
+    EXPECT_EQ(vec_x.y, 0.0);
+    EXPECT_EQ(vec_x.z, 0.0);
 
-  auto vec_y = Vector3::Y();
-  EXPECT_EQ(vec_y.x, 0.0);
-  EXPECT_EQ(vec_y.y, 1.0);
-  EXPECT_EQ(vec_y.z, 0.0);
+    auto vec_y = Vector3::Y();
+    EXPECT_EQ(vec_y.x, 0.0);
+    EXPECT_EQ(vec_y.y, 1.0);
+    EXPECT_EQ(vec_y.z, 0.0);
 
-  auto vec_z = Vector3::Z();
-  EXPECT_EQ(vec_z.x, 0.0);
-  EXPECT_EQ(vec_z.y, 0.0);
-  EXPECT_EQ(vec_z.z, 1.0);
+    auto vec_z = Vector3::Z();
+    EXPECT_EQ(vec_z.x, 0.0);
+    EXPECT_EQ(vec_z.y, 0.0);
+    EXPECT_EQ(vec_z.z, 1.0);
 
-  Vector3 vec_init_with_values{1.0, 2.0, 3.0};
-  EXPECT_EQ(vec_init_with_values.x, 1.0);
-  EXPECT_EQ(vec_init_with_values.y, 2.0);
-  EXPECT_EQ(vec_init_with_values.z, 3.0);
+    Vector3 vec_init_with_values{1.0, 2.0, 3.0};
+    EXPECT_EQ(vec_init_with_values.x, 1.0);
+    EXPECT_EQ(vec_init_with_values.y, 2.0);
+    EXPECT_EQ(vec_init_with_values.z, 3.0);
 
-  Vector3 copy_init = vec_init_with_values;
-  EXPECT_EQ(copy_init.x, 1.0);
-  EXPECT_EQ(copy_init.y, 2.0);
-  EXPECT_EQ(copy_init.z, 3.0);
+    Vector3 copy_init = vec_init_with_values;
+    EXPECT_EQ(copy_init.x, 1.0);
+    EXPECT_EQ(copy_init.y, 2.0);
+    EXPECT_EQ(copy_init.z, 3.0);
 
-  constexpr Vector3 static_vec{4.0, 5.0, 6.0};
-  static_assert(static_vec.x == 4.0 && static_vec.y == 5.0 && static_vec.z == 6.0, "Constexpr initializer failed");
+    constexpr Vector3 static_vec{4.0, 5.0, 6.0};
+    static_assert(static_vec.x == 4.0 && static_vec.y == 5.0 && static_vec.z == 6.0, "Constexpr initializer failed");
 }
 
 TEST(Core_Maths, Vector3_Normalize)

@@ -5,107 +5,68 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-Window::Window(GLFWwindow* ptr) : m_ptr{ptr} {
-	glfwSetWindowUserPointer(ptr, reinterpret_cast<void*>(this));
-}
-
-bool Window::SetTitle(std::string const& title)
-{
-	if(m_ptr) 
-	{
-		glfwSetWindowTitle(m_ptr, title.c_str());
-		return true;
-	}
-	return false;
-}
-
-bool Window::GetSize(int *width, int *height) const noexcept
-{
-	if(m_ptr)
-	{
-		glfwGetWindowSize(m_ptr, width, height);
-		return true;
-	}else{
-		return false;
-	}
-}
-
-GLFWwindow* Window::GlfwPtr()
-{
-	return m_ptr;
-}
-
-bool Window::SetCustomRenderFunction(RenderFunctionType&& function) noexcept
-{
-	m_render_function = function;
-	return true;
-}
-Window::RenderFunctionType Window::GetCustomRenderFunction() const noexcept
-{
-	return m_render_function;
-}
-
 class WindowsEventsManager
 {
 public:
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
 		// CC_LOG_INFO("Key event: {}\n", key);
 	}
 
-	static void CharCallback(GLFWwindow* window, unsigned int codepoint)
+	static void CharCallback(GLFWwindow *window, unsigned int codepoint)
 	{
 		// CC_LOG_INFO("Char callback: {}\n", codepoint);
 	}
 
-	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+	static void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 	{
 		// CC_LOG_INFO("Mouse Button callback: {}/{}/{}\n", button, action, mods);
 	}
 
-	static void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+	static void CursorPosCallback(GLFWwindow *window, double xpos, double ypos)
 	{
 		// CC_LOG_INFO("Cursor pos callback: {}/{}\n", xpos, ypos);
 	}
 
-	static void CursorEnterCallback(GLFWwindow* window, int entered)
+	static void CursorEnterCallback(GLFWwindow *window, int entered)
 	{
 		// CC_LOG_INFO("Mouse enter callback {}\n", entered);
 	}
 
-	static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	static void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 	{
 		// CC_LOG_INFO("Mouse enter callback {}/{}\n", xoffset, yoffset);
 	}
 
-	static void DropCallback(GLFWwindow* window, int path_count, const char* paths[])
+	static void DropCallback(GLFWwindow *window, int path_count, const char *paths[])
 	{
 		// CC_LOG_INFO("Drop callback {}\n", path_count);
 	}
 
-	static void WindowSizeCallback(GLFWwindow* window, int width, int height)
+	static void WindowSizeCallback(GLFWwindow *window, int width, int height)
 	{
 		// CC_LOG_INFO("Drop callback {}/{}\n", width, height);
 	}
 
-	static void WindowPosCallback(GLFWwindow* window, int xpos, int ypos)
+	static void WindowPosCallback(GLFWwindow *window, int xpos, int ypos)
 	{
 		// CC_LOG_INFO("Window pos callback {}/{}\n", xpos, ypos);
 	}
 
-	static void WindowCloseCallback(GLFWwindow* window)
+	static void WindowCloseCallback(GLFWwindow *window)
 	{
 		// CC_LOG_INFO("Window close callback\n");
 	}
-
 };
 
 WindowsManager::WindowsManager()
 {
 }
 
-WindowsManager::~WindowsManager() {
-	if (initialized) glfwTerminate();
+WindowsManager::~WindowsManager()
+{
+	if (initialized)
+		glfwTerminate();
 }
 
 bool WindowsManager::Initialize()
@@ -113,30 +74,34 @@ bool WindowsManager::Initialize()
 	CC_LOG_DEBUG("Initializing glfw...\n");
 	initialized = glfwInit();
 
-	if (!initialized) {
+	if (!initialized)
+	{
 		CC_LOG_DEBUG(" ... initializing glfw FAILED\n");
 		return false;
 	}
 
+	// TODO: Move to renderer (OpenGL impl)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	CC_LOG_DEBUG(" ... initializing glfw SUCCEEDED\n");
+
 	return true;
 }
 
 void WindowsManager::ProcessEvents()
 {
-	if (initialized) glfwPollEvents();
+	if (initialized)
+		glfwPollEvents();
 
 	// If windows should close, close
 }
 
-Window* WindowsManager::GetWindow(size_t winId) const
+Window *WindowsManager::GetWindow(size_t winId) const
 {
-	if(winId < 0 || winId < (m_windows.size() - 1))
+	if (winId < 0 || winId < (m_windows.size() - 1))
 		return nullptr;
 	return m_windows.at(winId).get();
 }
@@ -146,50 +111,59 @@ WindowsManager::operator bool()
 	return initialized;
 }
 
-Window* const WindowsManager::NewWindow()
+Window *const WindowsManager::NewWindow()
 {
-	// TODO: share resource if second window
-	auto* ptr = NewWindow(1280, 720, "Untitled");
+	auto *ptr = NewWindow(1280, 720, "Untitled");
 	return ptr;
 }
 
-Window* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h)
+Window *const WindowsManager::NewWindow(uint32_t const w, uint32_t const h)
 {
-	// TODO: share resource if second window
-	auto* ptr = NewWindow(w, h, "Untitled window");
+	auto *ptr = NewWindow(w, h, "Untitled window");
 	return ptr;
 }
 
-Window* const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::string const& title)
+Window *const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
 {
-	if (!initialized) if (!Initialize()) {
-		CC_LOG_ERROR("Could not initialize glfw in WindowsManager::NewWindow\n");
-	}
+	if (!initialized)
+		if (!Initialize())
+		{
+			CC_LOG_ERROR("Could not initialize glfw in WindowsManager::NewWindow\n");
+		}
 
-	// TODO: share resource if second window
-	GLFWwindow* ptr = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
-	if (!ptr) return nullptr;
-
-	auto winId = m_windows.size();
-	m_windows.emplace_back(std::make_unique<Window>(ptr));
+	GLFWwindow *ptr = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
+	if (!ptr)
+		return nullptr;
 
 	glfwMakeContextCurrent(ptr);
 
+	// TODO: Move to OpenGL impl
 	if (!m_gladInitialized)
 	{
+		CC_LOG_DEBUG("Initializing Glad interface...\n");
 		int version = gladLoadGL(glfwGetProcAddress);
-		while (GL_NO_ERROR != glGetError()) {}
+		while (GL_NO_ERROR != glGetError())
+		{
+		}
 		CC_LOG_SUCCESS("Loaded OpenGL {}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
-		if (version = 0) {
+		if (version = 0)
+		{
 			CC_LOG_ERROR("Failed to create a window as GLAD could not initialize\n");
 			return nullptr;
 		}
-		else {
+		else
+		{
 			CC_LOG_SUCCESS("Glad successfully initialized\n");
 		}
 		m_gladInitialized = true;
 	}
+
+	auto winId = m_windows.size();
+	auto& win_ptr = m_windows.emplace_back(std::make_unique<Window>(ptr));
+
+	glfwSetWindowSizeCallback(ptr, [](GLFWwindow *window, int width, int height)
+							  { reinterpret_cast<Window *>(glfwGetWindowUserPointer(window))->WindowResized(width, height); });
 
 	// glfwSetKeyCallback(ptr, [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); }); //WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
 	// glfwSetCharCallback(ptr, WindowsEventsManager::CharCallback);
@@ -217,10 +191,9 @@ size_t WindowsManager::GetNumWindows() const
 	return m_windows.size();
 }
 
-
 bool WindowsManager::MakeWindowCurrent(size_t winId) const
 {
-	if(winId < GetNumWindows())
+	if (winId < GetNumWindows())
 	{
 		glfwMakeContextCurrent(m_windows.at(winId)->GlfwPtr());
 		return true;
@@ -228,13 +201,11 @@ bool WindowsManager::MakeWindowCurrent(size_t winId) const
 	return false;
 }
 
-
 bool WindowsManager::SwapBuffers(size_t winId) const
 {
 	glfwSwapBuffers(m_windows.at(winId)->GlfwPtr());
 	return true;
 }
-
 
 bool WindowsManager::CloseWindow(size_t winId) const
 {
@@ -246,25 +217,25 @@ bool WindowsManager::CloseWindow(size_t winId) const
 	return true;
 }
 
-
 bool WindowsManager::WindowShouldClose(size_t winId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
 		return glfwWindowShouldClose(m_windows.at(winId)->GlfwPtr());
 	}
-	else return false;
+	else
+		return false;
 }
 
-
-bool WindowsManager::SetWindowTitle(size_t winId, std::string const& title) const
+bool WindowsManager::SetWindowTitle(size_t winId, std::string const &title) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
 		glfwSetWindowTitle(m_windows.at(winId)->GlfwPtr(), title.c_str());
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }
 
 bool WindowsManager::SetWindowFullscreen(size_t winId, bool, uint8_t screenId) const
@@ -274,7 +245,8 @@ bool WindowsManager::SetWindowFullscreen(size_t winId, bool, uint8_t screenId) c
 		CC_LOG_ERROR("SetWindowFullscreen is not implemented yet.");
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }
 
 bool WindowsManager::SetWindowSize(size_t winId, uint32_t w, uint32_t h) const
@@ -284,24 +256,25 @@ bool WindowsManager::SetWindowSize(size_t winId, uint32_t w, uint32_t h) const
 		glfwSetWindowSize(m_windows.at(winId)->GlfwPtr(), w, h);
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }
 
 bool WindowsManager::CenterWindow(uint32_t winId, uint8_t screenId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 
 		int monitorsCount;
-		GLFWmonitor** monitors = glfwGetMonitors(&monitorsCount);
+		GLFWmonitor **monitors = glfwGetMonitors(&monitorsCount);
 		if (screenId > (static_cast<uint32_t>(monitorsCount) - 1))
 		{
 			CC_LOG_ERROR("Only found {} screens, cannot center window on screen #{}\n", monitorsCount, screenId);
 			return false;
 		}
 
-		GLFWwindow* window = m_windows.at(winId)->GlfwPtr();
+		GLFWwindow *window = m_windows.at(winId)->GlfwPtr();
 
 		int mx, my, mw, mh;
 		glfwGetMonitorWorkarea(monitor, &mx, &my, &mw, &mh);
@@ -311,16 +284,18 @@ bool WindowsManager::CenterWindow(uint32_t winId, uint8_t screenId) const
 		glfwSetWindowPos(window, static_cast<int>((mw - ww) * 0.5), static_cast<int>((mh - wh) * 0.5));
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }
 
 bool WindowsManager::SetWindowTopLeftCorner(size_t winId, uint32_t x, uint32_t y, uint8_t screenId) const
 {
 	if (winId < m_windows.size() && m_windows.at(winId) != nullptr)
 	{
-		GLFWwindow* window = m_windows.at(winId)->GlfwPtr();
+		GLFWwindow *window = m_windows.at(winId)->GlfwPtr();
 		glfwSetWindowPos(window, x, y);
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }

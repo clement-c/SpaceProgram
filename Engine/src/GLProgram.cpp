@@ -29,6 +29,13 @@ GLProgram::GLProgram()
 	glCheckError();
 }
 
+
+GLProgram::GLProgram(std::string const& vtxSource, std::string const& fragSource) : GLProgram()
+{
+	SetShader(GLShader::Type::kVertex, vtxSource);
+	SetShader(GLShader::Type::kFragment, fragSource);
+}
+
 uint32_t GLProgram::GetId() const
 {
 	return m_id;
@@ -150,7 +157,7 @@ bool GLProgram::Link(bool deleteShaders)
 			shaderPair.second.Delete();
 	}
 
-	CC_LOG_SUCCESS("GLProgram correctly linked.");
+	CC_LOG_SUCCESS("GLProgram correctly linked.\n");
 	return m_linked;
 }
 

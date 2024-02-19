@@ -12,17 +12,30 @@ struct GLBuffer
         kArrayBuffer = GL_ARRAY_BUFFER /* Vertex buffer */
     };
 
-    DLLEXPORT GLBuffer(Type tp);
+    enum class Usage : int
+    {
+        StreamDraw = GL_STREAM_DRAW,
+        StreamRead = GL_STREAM_READ,
+        StreamCopy = GL_STREAM_COPY,
+        StaticDraw = GL_STATIC_DRAW,
+        StaticRead = GL_STATIC_READ,
+        StaticCopy = GL_STATIC_COPY,
+        DynamicDraw = GL_DYNAMIC_DRAW,
+        DynamicRead = GL_DYNAMIC_READ,
+        DynamicCopy = GL_DYNAMIC_COPY
+    };
+
+    DLLEXPORT GLBuffer(Type tp = Type::kArrayBuffer);
 
     DLLEXPORT uint32_t GetId() const;
 
     DLLEXPORT bool Bind();
     DLLEXPORT bool Unbind();
 
-    DLLEXPORT bool SetData(int* data, size_t size, int usage);
-    DLLEXPORT bool SetData(unsigned int* data, size_t size, int usage);
-    DLLEXPORT bool SetData(float* data, size_t size, int usage);
-    DLLEXPORT bool SetData(double* data, size_t size, int usage);
+    DLLEXPORT bool SetData(int const* data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(unsigned int const* data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(float const* data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(double const* data, size_t size, Usage usage);
 
     DLLEXPORT Type GetType() const;
 

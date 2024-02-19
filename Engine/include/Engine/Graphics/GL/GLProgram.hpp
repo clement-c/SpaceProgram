@@ -3,6 +3,7 @@
 #include "../../Core/Lib.hpp"
 
 #include "GLShader.hpp"
+#include <string>
 #include <unordered_map>
 
 class GLProgram
@@ -36,7 +37,7 @@ public:
 	DLLEXPORT static std::string const DefaultFragmentSource;
 
 	DLLEXPORT GLProgram();
-	DLLEXPORT GLProgram(std::string_view vtxSource, std::string_view fragSource);
+	DLLEXPORT GLProgram(std::string const& vtxSource, std::string const& fragSource);
 
 	DLLEXPORT uint32_t GetId() const;
 	DLLEXPORT int GetInfo(InfoType) const;

@@ -9,29 +9,26 @@
 #include <Engine/Graphics/GL/GLBuffer.hpp>
 #include <Engine/Graphics/GL/GLVAO.hpp>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     Application app{argc, argv};
 
     // CC_LOG_INFO("Creating window...\n");
-    auto const mainWindowId = app.NewWindow(1920, 1080, "OGLTriangleWindow");
-    WindowsManager& winManager = app.GetWindowsManager();
-    winManager.CenterWindow(mainWindowId);
-    winManager.MakeWindowCurrent(mainWindowId);
+    auto mainWindowId = app.NewWindow(1920, 1080, "OGLTriangleWindow");
+    WindowsManager &winManager = app.GetWindowsManager();
+    // winManager.CenterWindow(mainWindowId);
+    // winManager.MakeWindowCurrent(mainWindowId);
 
     // Upload the vertices data to a VBO
-    float vertData[] = {
+    float const vertData[] = {
         -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f};
     GLBuffer vbo(GLBuffer::Type::kArrayBuffer);
-    vbo.SetData(vertData, sizeof(vertData), GL_STATIC_DRAW);
+    vbo.SetData(vertData, sizeof(vertData), GLBuffer::Usage::StaticDraw);
 
     // Register the buffers and their layouts in a VAO
-    GLVAO triangleVAO(vbo, {
-        { 0, {3, GL_FLOAT, false, (int)(3 * sizeof(float)), (void*)(0)} }
-    });
+    GLVAO triangleVAO(vbo, {{0, {3, GL_FLOAT, false, (int)(3 * sizeof(float)), (void *)(0)}}});
 
     GLProgram program;
     program.Link(); // Will set and compile the default shaders if none were provided
@@ -40,7 +37,8 @@ int main(int argc, char** argv)
 
     // double fps = 0.0f;
     // double prevSec = 0.0;
-    auto loop = [&](Application& app, double timeSec) -> int {
+    auto loop = [&](Application &app, double timeSec) -> int
+    {
         // double timeSec = timeMs * 1.0e-3;
         // fps = 1.0 / (timeSec - prevSec);
         // prevSec = timeSec;
