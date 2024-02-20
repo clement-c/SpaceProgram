@@ -112,6 +112,18 @@ bool Renderer::Render()
         return false;
 }
 
+bool Renderer::DisableEntity(uint32_t mesh_gpu_id)
+{
+    CC_LOG_ERROR("Renderer::DisableEntity not implmented");
+    return false;
+}
+
+bool Renderer::DeleteEntity(uint32_t mesh_gpu_id)
+{
+    CC_LOG_ERROR("Renderer::DeleteEntity not implmented");
+    return false;
+}
+
 bool Renderer::UpdateCamera(Camera const &camera) noexcept
 {
     if (m_backend)

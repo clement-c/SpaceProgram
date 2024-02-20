@@ -26,6 +26,7 @@ struct GLBuffer
     };
 
     DLLEXPORT GLBuffer(Type tp = Type::kArrayBuffer);
+    DLLEXPORT ~GLBuffer();
 
     DLLEXPORT uint32_t GetId() const;
 
@@ -43,7 +44,7 @@ struct GLBuffer
     DLLEXPORT size_t GetNumComponents() const;
 
 private:
-    size_t m_num = 0;
+    size_t m_length = 0;
     uint32_t m_id = 0;
     int m_dataType = 0;
     Type m_type = Type::kArrayBuffer;

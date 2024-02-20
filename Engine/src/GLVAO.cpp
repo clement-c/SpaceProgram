@@ -31,6 +31,12 @@ GLVAO::GLVAO(GLBuffer& buffer, std::map<int, AttribPointerType> const& attribs)
 	glCheckError();
 }
 
+GLVAO::~GLVAO()
+{
+	if(glIsVertexArray(m_id))
+		glDeleteVertexArrays(1, &m_id);
+}
+
 uint32_t GLVAO::GetId() const
 {
 	return m_id;

@@ -57,9 +57,16 @@ public:
 
     // Managing meshes
     DLLEXPORT int32_t Upload(TriangulatedMesh const &);
+
     DLLEXPORT bool TransformEntity(int32_t mesh_gpu_id, Matrix44 const &transform);
+
+    DLLEXPORT bool DisableEntity(uint32_t mesh_gpu_id);
+    DLLEXPORT bool DeleteEntity(uint32_t mesh_gpu_id);
+
+    // Render geometries
     DLLEXPORT bool Render();
 
+    // Camera utils
     DLLEXPORT bool UpdateCamera(Camera const&) noexcept;
     void SetViewport(int width, int height) noexcept;
 

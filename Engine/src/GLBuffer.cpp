@@ -10,6 +10,12 @@ GLBuffer::GLBuffer(Type tp) : m_type{ static_cast<int>(tp) } {
     glCheckError();
 }
 
+GLBuffer::~GLBuffer()
+{
+    if(glIsBuffer(m_id))
+        glDeleteBuffers(1, &m_id);
+}
+
 bool GLBuffer::Bind()
 {
     glBindBuffer(static_cast<int>(m_type), m_id);
@@ -27,8 +33,8 @@ bool GLBuffer::Unbind()
 bool GLBuffer::SetData(float const* data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
-    m_num = bufferSize / sizeof(float);
-    glBufferData(static_cast<int>(m_type), m_num * sizeof(float), data, static_cast<int>(usage));
+    m_length = bufferSize / sizeof(float);
+    glBufferData(static_cast<int>(m_type), m_length * sizeof(float), data, static_cast<int>(usage));
     glCheckError();
     Unbind();
     m_dataType = GL_FLOAT;
@@ -38,8 +44,8 @@ bool GLBuffer::SetData(float const* data, size_t bufferSize, GLBuffer::Usage usa
 bool GLBuffer::SetData(unsigned int const* data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
-    m_num = bufferSize / sizeof(unsigned int);
-    glBufferData(static_cast<int>(m_type), m_num * sizeof(unsigned int), data, static_cast<int>(usage));
+    m_length = bufferSize / sizeof(unsigned int);
+    glBufferData(static_cast<int>(m_type), m_length * sizeof(unsigned int), data, static_cast<int>(usage));
     glCheckError();
     Unbind();
     m_dataType = GL_UNSIGNED_INT;
@@ -49,8 +55,8 @@ bool GLBuffer::SetData(unsigned int const* data, size_t bufferSize, GLBuffer::Us
 bool GLBuffer::SetData(int const* data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
-    m_num = bufferSize / sizeof(int);
-    glBufferData(static_cast<int>(m_type), m_num * sizeof(int), data, static_cast<int>(usage));
+    m_length = bufferSize / sizeof(int);
+    glBufferData(static_cast<int>(m_type), m_length * sizeof(int), data, static_cast<int>(usage));
     glCheckError();
     Unbind();
     m_dataType = GL_INT;
@@ -60,8 +66,8 @@ bool GLBuffer::SetData(int const* data, size_t bufferSize, GLBuffer::Usage usage
 bool GLBuffer::SetData(double const* data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
-    m_num = bufferSize / sizeof(double);
-    glBufferData(static_cast<int>(m_type), m_num * sizeof(double), data, static_cast<int>(usage));
+    m_length = bufferSize / sizeof(double);
+    glBufferData(static_cast<int>(m_type), m_length * sizeof(double), data, static_cast<int>(usage));
     glCheckError();
     Unbind();
     m_dataType = GL_DOUBLE;
@@ -85,5 +91,5 @@ uint32_t GLBuffer::GetId() const
 
 size_t GLBuffer::GetNumComponents() const
 {
-    return m_num;
+    return m_length;
 }

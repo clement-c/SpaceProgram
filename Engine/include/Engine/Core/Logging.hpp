@@ -16,7 +16,7 @@
 #ifndef NDEBUG
 #define CC_LOG_LEVEL CC_DEBUG_LEVEL
 #else
-#define CC_LOG_LEVEL CC_INFO_LEVEL
+#define CC_LOG_LEVEL CC_SUCCESS_LEVEL
 #endif
 #endif
 

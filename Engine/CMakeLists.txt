@@ -17,7 +17,7 @@ set(ENGINE_SOURCE_FILES "src/Application.cpp" "src/Camera.cpp" "src/checkError.h
 
 add_library(${LIB_NAME} SHARED ${ENGINE_SOURCE_FILES})
 
-target_compile_definitions(${LIB_NAME} PUBLIC GLAD_API_CALL_EXPORT CC_LOG_LEVEL=CC_DEBUG_LEVEL PRIVATE CC_ENGINE_EXPORTS ENGINE_IMPLEMENTS_OPENGL)
+target_compile_definitions(${LIB_NAME} PUBLIC GLAD_API_CALL_EXPORT CC_LOG_LEVEL=CC_DEBUG_LEVEL PRIVATE CC_ENGINE_EXPORTS ENGINE_IMPLEMENTS_OPENGL) # CC_LOG_LEVEL=CC_DEBUG_LEVEL
 set(public_includes include;_External/fmt/include)
 target_include_directories(${LIB_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
