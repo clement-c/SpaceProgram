@@ -92,22 +92,28 @@ namespace CC
             return false;
         }
 
-        Argument& AddArgument(std::string shortNm, Type &type) { // TODO: Multi
+        Argument &AddArgument(std::string shortNm, Type &type)
+        { // TODO: Multi
             return m_args.emplace_back(Flag(shortNm), type);
         }
-        Argument& AddArgument(std::string shortNm, std::string const &longNm, Type &type) {  // TODO: Multi
+        Argument &AddArgument(std::string shortNm, std::string const &longNm, Type &type)
+        { // TODO: Multi
             return m_args.emplace_back(Flag(shortNm, longNm), type);
         }
-        Argument& AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Type &type) { // TODO: Multi
+        Argument &AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Type &type)
+        { // TODO: Multi
             return m_args.emplace_back(Flag(shortNm, longNm, help), type);
         }
-        Argument& AddArgument(std::string shortNm, Value const &defaultValue) { // TODO: Multi
+        Argument &AddArgument(std::string shortNm, Value const &defaultValue)
+        {                                                                      // TODO: Multi
             return m_args.emplace_back(Flag(shortNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
         }
-        Argument& AddArgument(std::string shortNm, std::string const &longNm, Value const &defaultValue) {  // TODO: Multi
+        Argument &AddArgument(std::string shortNm, std::string const &longNm, Value const &defaultValue)
+        {                                                                              // TODO: Multi
             return m_args.emplace_back(Flag(shortNm, longNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
         }
-        Argument& AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Value const &defaultValue) { // TODO: Multi
+        Argument &AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Value const &defaultValue)
+        {                                                                                    // TODO: Multi
             return m_args.emplace_back(Flag(shortNm, longNm, help), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
         }
 
@@ -116,7 +122,7 @@ namespace CC
         std::vector<Argument> m_args; // TODO: Mendatory args
     };
 
-    bool Parse(ArgumentsDefinition const& definition, int argc, char const* argv[])
+    bool Parse(ArgumentsDefinition const &definition, int argc, char const *argv[])
     {
         Path appPath{std::string(argv[0])};
 

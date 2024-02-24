@@ -31,7 +31,7 @@ struct TriangulatedMesh
         m_vertices.resize(numVertices * NUM_FLOATS_PER_VTX);
         memcpy(&(*m_vertices.begin()), verticesData, numVertices * 8 * sizeof(float));
         // Set faces data
-        if(trianglesData)
+        if (trianglesData)
         {
             // TODO: Implement face indices
             CC_LOG_ERROR("Passing triangles to build EBOs, but not implemented yet.");
@@ -41,7 +41,7 @@ struct TriangulatedMesh
         return true;
     }
 
-    float const* RawData() const
+    float const *RawData() const
     {
         return &(*m_vertices.begin());
     }

@@ -34,7 +34,7 @@ public:
 
 	uint32_t GetId() const;
 
-	bool SetSource(std::string const& src);
+	bool SetSource(std::string const &src);
 	bool Compile();
 	bool Delete();
 

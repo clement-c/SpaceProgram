@@ -11,4 +11,5 @@ Deliverable 2: `02_GLSpehere`
 
 General TODO list for the project management and code cleanup, not directky linked to deliverables.
 
+- [ ] Enforce a MainWindow in the WindowManager/Application (for context sharing with other windows, glad initializaing on that context)
 - [ ] Move thirdparty dependencies to a side project that can be retrieved as an archive in CMake

@@ -43,11 +43,10 @@ GLFWwindow *Window::GlfwPtr()
 	return m_ptr;
 }
 
-Renderer& Window::GetRenderer()
+Renderer &Window::GetRenderer()
 {
 	return m_renderer;
 }
-
 
 void Window::WindowResized(int width, int height)
 {

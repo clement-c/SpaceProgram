@@ -8,7 +8,6 @@
 
 #include "Lib.hpp"
 
-
 struct Window;
 
 /**
@@ -49,7 +48,7 @@ struct WindowsManager
 
 	DLLEXPORT void ProcessEvents();
 
-	DLLEXPORT Window* GetWindow(size_t winId) const;
+	DLLEXPORT Window *GetWindow(size_t winId) const;
 	/**
 	 * @brief Change the title of a window
 	 *

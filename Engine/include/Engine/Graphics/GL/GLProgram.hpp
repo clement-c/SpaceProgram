@@ -37,7 +37,7 @@ public:
 	DLLEXPORT static std::string const DefaultFragmentSource;
 
 	DLLEXPORT GLProgram();
-	DLLEXPORT GLProgram(std::string const& vtxSource, std::string const& fragSource);
+	DLLEXPORT GLProgram(std::string const &vtxSource, std::string const &fragSource);
 
 	DLLEXPORT uint32_t GetId() const;
 	DLLEXPORT int GetInfo(InfoType) const;
@@ -49,10 +49,10 @@ public:
 	DLLEXPORT bool Link(bool deleteShaders = true);
 	DLLEXPORT bool Use();
 
-	DLLEXPORT bool SetUniform(std::string const uniformName, int value); // GLShader::Type, 
-	DLLEXPORT bool SetUniform(std::string const uniformName, float value); // GLShader::Type, 
-	DLLEXPORT bool SetUniform(std::string const uniformName, double value); // GLShader::Type, 
-	DLLEXPORT bool SetUniform(std::string const uniformName, Matrix44 const& value); // GLShader::Type, 
+	DLLEXPORT bool SetUniform(std::string const uniformName, int value);			 // GLShader::Type,
+	DLLEXPORT bool SetUniform(std::string const uniformName, float value);			 // GLShader::Type,
+	DLLEXPORT bool SetUniform(std::string const uniformName, double value);			 // GLShader::Type,
+	DLLEXPORT bool SetUniform(std::string const uniformName, Matrix44 const &value); // GLShader::Type,
 	// bool SetUniform(GLShader::Type, std::string const uniformName, glm::mat4 const&);
 
 	DLLEXPORT int GetNumActiveUniforms() const;

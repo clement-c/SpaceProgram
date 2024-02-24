@@ -17,7 +17,7 @@ struct Window
     DLLEXPORT bool GetSize(int *width, int *height) const noexcept;
     DLLEXPORT bool GetSize(float size[2]) const noexcept;
 
-    DLLEXPORT Renderer& GetRenderer();
+    DLLEXPORT Renderer &GetRenderer();
 
     GLFWwindow *GlfwPtr();
 

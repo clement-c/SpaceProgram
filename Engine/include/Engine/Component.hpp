@@ -7,7 +7,6 @@ using ComponentType = uint8_t;
 static constexpr ComponentType kMaxComponents = std::numeric_limits<ComponentType>::max(); // 256 ids
 using ComponentsSignature = std::bitset<kMaxComponents>;
 
-
 struct Component
 {
 
@@ -23,9 +22,8 @@ private:
      * })
      */
 
-    static ComponentType Register(std::string const& name /* version, dataFields */);
+    static ComponentType Register(std::string const &name /* version, dataFields */);
     // static ComponentType Register(/*ComponentBlueprint*/); // ComponentBlueprint: created at runtime of from text/json to define structure
 
     // void* DataPtr(void* field_offset = nullptr);
-
 };

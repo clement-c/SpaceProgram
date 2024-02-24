@@ -27,16 +27,16 @@ public:
 
 	DLLEXPORT GLVAO() = delete;
 	DLLEXPORT GLVAO(GLVAO const &) = delete;
-    DLLEXPORT ~GLVAO();
+	DLLEXPORT ~GLVAO();
 	/**
 	 * @brief Creates a VAO from a GL Buffer and a description of attributes
 	 * 		  (as used iun the glVertexAttribPointer function) per layout index
-	 * 
+	 *
 	 * @param buffer 	Buffer containing the data for the vertices
-	 * @param attributesLayout 	Lists the layout for each attribute. 
+	 * @param attributesLayout 	Lists the layout for each attribute.
 	 * 							The map key (int) should be the same than the `layout=key` in the vertex shader
 	 */
-	DLLEXPORT GLVAO(GLBuffer &buffer, std::map<int, AttribPointerType> const & attributesLayout);
+	DLLEXPORT GLVAO(GLBuffer &buffer, std::map<int, AttribPointerType> const &attributesLayout);
 
 	DLLEXPORT uint32_t GetId() const;
 

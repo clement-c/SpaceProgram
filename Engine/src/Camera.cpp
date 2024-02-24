@@ -7,11 +7,6 @@
 #include "Engine/Runtime/Camera.hpp"
 #include "Engine/Core/Maths/Constants.hpp"
 
-// TEMP:
-// #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 Camera::Camera() {}
 Camera::Camera(float fov, float nearPlane, float farPlane) : m_fov{fov}, m_nearPlane{nearPlane}, m_farPlane{farPlane} {}
 
@@ -22,6 +17,7 @@ Camera &Camera::SetFOV(float fov_degrees)
     m_dirtyProjection = true;
     return *this;
 }
+
 float Camera::GetNearPlane() { return m_nearPlane; }
 Camera &Camera::SetNearPlane(float near_plane)
 {
@@ -29,6 +25,7 @@ Camera &Camera::SetNearPlane(float near_plane)
     m_dirtyProjection = true;
     return *this;
 }
+
 float Camera::GetFarPlane() { return m_farPlane; }
 Camera &Camera::SetFarPlane(float far_plane)
 {
@@ -55,6 +52,7 @@ void Camera::SetViewMatrix(Matrix44 const &mat)
 {
     m_viewMatrix = mat;
 }
+
 Matrix44 Camera::GetViewMatrix()
 {
     return m_viewMatrix;

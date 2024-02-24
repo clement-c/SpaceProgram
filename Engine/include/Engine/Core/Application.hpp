@@ -27,9 +27,9 @@ public:
 	 */
 	DLLEXPORT bool SetLoop(LoopType);
 
-	DLLEXPORT Window* const NewWindow();
-	DLLEXPORT Window* const NewWindow(uint32_t const width, uint32_t const height);
-	DLLEXPORT Window* const NewWindow(uint32_t const width, uint32_t const height, std::string const &title);
+	DLLEXPORT Window *const NewWindow();
+	DLLEXPORT Window *const NewWindow(uint32_t const width, uint32_t const height);
+	DLLEXPORT Window *const NewWindow(uint32_t const width, uint32_t const height, std::string const &title);
 
 	DLLEXPORT WindowsManager &GetWindowsManager();
 
@@ -48,4 +48,6 @@ private:
 	WindowsManager m_windowsManager;
 	Engine m_engine;
 	LoopType m_loop;
+
+	bool m_shouldExit = false;
 };

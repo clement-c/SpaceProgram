@@ -4,13 +4,12 @@
 #include "GLVAO.hpp"
 #include "GLProgram.hpp"
 
-
 class RendererBackendOpenGL : public RendererBackendI
 {
 public:
-//     RendererBackendOpenGL() : RendererBackendI(), m_projMatrix{Matrix44::Identity()}, m_viewMatrix{Matrix44::Identity()} {
-//         CC_LOG_DEBUG("  RendererBackendOpenGL::RendererBackendOpenGL() done.\n");
-//     }
+    //     RendererBackendOpenGL() : RendererBackendI(), m_projMatrix{Matrix44::Identity()}, m_viewMatrix{Matrix44::Identity()} {
+    //         CC_LOG_DEBUG("  RendererBackendOpenGL::RendererBackendOpenGL() done.\n");
+    //     }
 
     virtual bool Initialize() final;
 
@@ -23,7 +22,7 @@ public:
 
 private:
     // TODO: update to better allocation for rapid allocation/deletion
-    std::vector<GLVAO*> m_vaos;
+    std::vector<GLVAO *> m_vaos;
     std::vector<Matrix44> m_modelMatrices;
     Matrix44 m_projMatrix, m_viewMatrix;
     // TODO: movbe to material management

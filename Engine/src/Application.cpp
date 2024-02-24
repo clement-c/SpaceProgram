@@ -94,8 +94,10 @@ inline bool Application::ShouldExit()
 	for (auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.WindowShouldClose(i));
 	if (allWindowsClosed)
-		return true;
-	return false;
+		m_shouldExit = true;
+	else
+		m_shouldExit = m_shouldExit;
+	return m_shouldExit;
 }
 
 bool Application::Exit(int code)
@@ -103,6 +105,7 @@ bool Application::Exit(int code)
 	bool allWindowsClosed = true;
 	for (auto i = 0; i < GetWindowsManager().GetNumWindows(); i++)
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.CloseWindow(i));
+	m_shouldExit |= allWindowsClosed;
 	return allWindowsClosed;
 }
 

@@ -33,10 +33,10 @@ struct GLBuffer
     DLLEXPORT bool Bind();
     DLLEXPORT bool Unbind();
 
-    DLLEXPORT bool SetData(int const* data, size_t size, Usage usage);
-    DLLEXPORT bool SetData(unsigned int const* data, size_t size, Usage usage);
-    DLLEXPORT bool SetData(float const* data, size_t size, Usage usage);
-    DLLEXPORT bool SetData(double const* data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(int const *data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(unsigned int const *data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(float const *data, size_t size, Usage usage);
+    DLLEXPORT bool SetData(double const *data, size_t size, Usage usage);
 
     DLLEXPORT Type GetType() const;
 

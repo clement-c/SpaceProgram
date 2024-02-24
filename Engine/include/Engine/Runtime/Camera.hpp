@@ -6,21 +6,21 @@
 struct Camera
 {
 public:
-    DLLEXPORT Camera();
-    DLLEXPORT Camera(Matrix44 const& viewMatrix) : m_viewMatrix{viewMatrix} {}
-    DLLEXPORT Camera(float fov, float nearPlane, float farPlane);
+	DLLEXPORT Camera();
+	DLLEXPORT Camera(Matrix44 const &viewMatrix) : m_viewMatrix{viewMatrix} {}
+	DLLEXPORT Camera(float fov, float nearPlane, float farPlane);
 
 	// Projection attributes
 	DLLEXPORT float GetFOV();
-	DLLEXPORT Camera& SetFOV(float fov_degrees);
+	DLLEXPORT Camera &SetFOV(float fov_degrees);
 	DLLEXPORT float GetNearPlane();
-	DLLEXPORT Camera& SetNearPlane(float near_plane);
+	DLLEXPORT Camera &SetNearPlane(float near_plane);
 	DLLEXPORT float GetFarPlane();
-	DLLEXPORT Camera& SetFarPlane(float far_plane);
+	DLLEXPORT Camera &SetFarPlane(float far_plane);
 
 	DLLEXPORT Matrix44 GetProjectionMatrix(float aspectRatio);
 
-	DLLEXPORT void SetViewMatrix(Matrix44 const& mat);
+	DLLEXPORT void SetViewMatrix(Matrix44 const &mat);
 	DLLEXPORT Matrix44 GetViewMatrix();
 
 private:
@@ -31,8 +31,7 @@ private:
 	bool m_dirtyProjection = true;
 	bool m_dirtyView = true;
 
-    // position
+	// position
 	Matrix44 m_projectionMatrix;
 	Matrix44 m_viewMatrix;
-
 };
