@@ -1,0 +1,1 @@
+Temporary scripts to manipulate assets and bits of code until proper tooling is developed

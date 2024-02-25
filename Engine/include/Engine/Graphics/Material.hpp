@@ -4,12 +4,15 @@
 
 struct Material
 {
+
     enum class Type
     {
         kFlat = 0,
         kSolid = 2,
+        kMatCap = 4,
         kPBR = 8,
-        kDebugNormals = 16
+        kDebugNormals = 16,
+        kCustom = 24
     };
 
     Material(std::string const &name, Type type);

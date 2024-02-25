@@ -10,6 +10,7 @@
 #include "rsc/icosphere.hpp"
 
 #include <iostream>
+#include <Engine/Core/Maths/MathsIO.hpp>
 
 int main(int argc, char **argv)
 {
@@ -30,6 +31,7 @@ int main(int argc, char **argv)
 
     // Get the renderer, 1 renderer per window for now - need to check context sharing and glad initialization when mulptilpe windows
     auto &renderer = main_window->GetRenderer();
+    // renderer.NewMaterial(Material::Type::kSolid);
 
     // Set a static camera
     Camera camera;
@@ -38,19 +40,24 @@ int main(int argc, char **argv)
 
     // Upload mesh to the GPU
     int mesh_gpu_id = -1;
+    int moon_gpu_id = -1;
     {
         // Create and upload mesh
-        TriangulatedMesh mesh;
-        mesh.SetData(Icosphere, 960u);
-        mesh_gpu_id = renderer.Upload(mesh);
+        TriangulatedMesh sphere;
+        sphere.SetData(Icosphere, sizeof(Icosphere) / 8 / sizeof(float));
+        mesh_gpu_id = renderer.Upload(sphere);
+        moon_gpu_id = renderer.Upload(sphere);
     }
 
     // Loop
-    auto loop = [&renderer, mesh_gpu_id](Application &app, double timeSec) -> int
+    auto loop = [&renderer, mesh_gpu_id, moon_gpu_id](Application &app, double timeSec) -> int
     {
         Matrix44 rotation = Matrix44(Matrix33::RotationY(static_cast<float>(timeSec * 0.5)));
+        Matrix44 scale{0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0 ,1.0};
+        Matrix44 moon_transf = scale * Matrix44::FromPosition(0.0, 0.0, 4.0) * rotation; // Matrix44(Matrix33::RotationY(static_cast<float>(timeSec * 0.5)));
         // Transform a mesh already uploaded to GPU using its ID in the renderer
         renderer.TransformEntity(mesh_gpu_id, rotation);
+        renderer.TransformEntity(moon_gpu_id, moon_transf);
         return 0;
     };
 

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include <stdint.h>
 
 #include "Core/Lib.hpp"
 #include "Graphics/RendererBackendI.hpp"
+#include "Graphics/Material.hpp"
 
 // Manipulated objects
 struct Camera;
@@ -51,9 +53,10 @@ public:
      */
     DLLEXPORT bool Initialize(API api = API::kOpenGL45);
 
-    // Define targets
-    // bool SetRenderTarget(Window);
-    // bool SetRenderTarget(Framebuffer);
+    // Materials
+    Material& DefaultMaterial() const;
+    Material& NewMaterial(Material::Type);
+    bool BindMaterial(Material const&);
 
     // Managing meshes
     DLLEXPORT int32_t Upload(TriangulatedMesh const &);

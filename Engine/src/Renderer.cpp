@@ -83,6 +83,7 @@ bool Renderer::Initialize(Renderer::API api)
         // initialize backend
         return true;
     }
+
 }
 
 int32_t Renderer::Upload(TriangulatedMesh const &mesh)

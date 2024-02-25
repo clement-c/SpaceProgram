@@ -196,3 +196,12 @@ bool GLProgram::SetUniform(std::string const uniformName, Matrix44 const &value)
 	glCheckError();
 	return true;
 }
+
+bool GLProgram::SetUniform(std::string const uniformName, Vector3 const &value)
+{
+	int loc = glGetUniformLocation(m_id, uniformName.c_str());
+	glUniform3fv(loc, 1, value.data.data());
+	glCheckError();
+	return true;
+}
+

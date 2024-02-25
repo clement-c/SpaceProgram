@@ -13,6 +13,7 @@ layout (location = 2) in vec3 aNormal;
 
 out vec2 TexCoords;
 out vec3 Normal;
+out vec3 FragPos;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -20,9 +21,11 @@ uniform mat4 projection;
 
 void main()
 {
-   gl_Position = projection * view * model * vec4(aPos, 1.0f);
+   Normal = normalize(mat3(transpose(inverse(model))) * aNormal); // mat3(model) * aNormal;
    TexCoords = aTexCoords;
-   Normal = aNormal;
+   FragPos = vec3(model * vec4(aPos, 1.0f));
+
+   gl_Position = projection * view * model * vec4(aPos, 1.0f);
 })vtx";
 
 static const std::string SRC_FRAGMENT = R"frag(#version 330 core
@@ -30,10 +33,14 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec3 Normal;
+in vec3 FragPos;
+
+uniform vec3 defaultDirectional;
 
 void main()
 {
-   FragColor = vec4(Normal, 1.0f);
+    vec3 col = min(max(dot(Normal, defaultDirectional), 0.0f), 1.0) * vec3(0.5f);
+    FragColor = vec4(col, 1.0f);
 })frag";
 
 bool RendererBackendOpenGL::Initialize()
@@ -93,14 +100,18 @@ bool RendererBackendOpenGL::RenderAll()
         return false;
     }
 
+    auto view_matrix = m_camera.GetViewMatrix();
+    Vector3 default_directional_light = Vector3(0.5, 0.707107, 0.5) * view_matrix;
+
     // Set camera uniforms (projection/view)
     // TODO: dirty flag on projection matrix if the ratio is similar
     if (!m_program.SetUniform("projection", m_camera.GetProjectionMatrix(static_cast<float>(m_width) / static_cast<float>(m_height))) ||
-        !m_program.SetUniform("view", m_camera.GetViewMatrix()))
+        !m_program.SetUniform("view", view_matrix))
     {
         CC_LOG_ERROR("Failed to set camera uniforms in shader.");
         return false;
     }
+    m_program.SetUniform("defaultDirectional", default_directional_light);
 
     // Set model uniform and launch draw per model
     for (uint32_t i = 0; i < m_modelMatrices.size(); i++)

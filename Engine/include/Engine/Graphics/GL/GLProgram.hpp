@@ -52,6 +52,7 @@ public:
 	DLLEXPORT bool SetUniform(std::string const uniformName, int value);			 // GLShader::Type,
 	DLLEXPORT bool SetUniform(std::string const uniformName, float value);			 // GLShader::Type,
 	DLLEXPORT bool SetUniform(std::string const uniformName, double value);			 // GLShader::Type,
+	DLLEXPORT bool SetUniform(std::string const uniformName, Vector3 const &value); // GLShader::Type,
 	DLLEXPORT bool SetUniform(std::string const uniformName, Matrix44 const &value); // GLShader::Type,
 	// bool SetUniform(GLShader::Type, std::string const uniformName, glm::mat4 const&);
 
