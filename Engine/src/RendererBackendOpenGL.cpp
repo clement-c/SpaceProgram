@@ -1,6 +1,9 @@
 #pragma once
 
+// #include <iostream>
+
 #include "Engine/Core/Logging.hpp"
+#include "Engine/Core/Maths/Matrix33.hpp"
 
 #include "Engine/Graphics/GL/GLBuffer.hpp"
 #include "Engine/Graphics/GL/GLProgram.hpp"
@@ -21,11 +24,11 @@ uniform mat4 projection;
 
 void main()
 {
-   Normal = normalize(mat3(transpose(inverse(model))) * aNormal); // mat3(model) * aNormal;
-   TexCoords = aTexCoords;
-   FragPos = vec3(model * vec4(aPos, 1.0f));
+    TexCoords = aTexCoords;
+    Normal = normalize(mat3(transpose(inverse(model))) * aNormal); // TODO: Move model matrix "homogenization" to render loop of engine to do it only once
+    FragPos = vec3(model * vec4(aPos, 1.0f));
 
-   gl_Position = projection * view * model * vec4(aPos, 1.0f);
+    gl_Position = projection * view * vec4(FragPos, 1.0f);
 })vtx";
 
 static const std::string SRC_FRAGMENT = R"frag(#version 330 core
@@ -39,7 +42,7 @@ uniform vec3 defaultDirectional;
 
 void main()
 {
-    vec3 col = min(max(dot(Normal, defaultDirectional), 0.0f), 1.0) * vec3(0.5f);
+    vec3 col = min(max(dot(defaultDirectional, Normal), 0.0f), 1.0) * vec3(0.5f);
     FragColor = vec4(col, 1.0f);
 })frag";
 
@@ -75,6 +78,7 @@ bool RendererBackendOpenGL::Free(uint32_t index)
     if (m_vaos.at(index))
     {
         delete m_vaos.at(index);
+        m_vaos.at(index) = nullptr;
         return true;
     }
     return false;
@@ -88,7 +92,7 @@ bool RendererBackendOpenGL::SetMatrix(int32_t mesh_gpu_id, Matrix44 const &trans
 
 bool RendererBackendOpenGL::RenderAll()
 {
-    // TODO: PRIO 1 - Create options and move to windows
+    // TODO: PRIO 1 - Create options and move to windows (or render surface)
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); //((sin(timeSec) * 0.5 + 0.5), 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,17 +105,17 @@ bool RendererBackendOpenGL::RenderAll()
     }
 
     auto view_matrix = m_camera.GetViewMatrix();
-    Vector3 default_directional_light = Vector3(0.5, 0.707107, 0.5) * view_matrix;
+    Vector3 default_directional_light = Vector3(0.5, 0.707107, 0.5); // Points 45 degrees down and forward
 
     // Set camera uniforms (projection/view)
-    // TODO: dirty flag on projection matrix if the ratio is similar
+    // TODO: dirty flag on projection matrix, do not recompute if ratio is similar - maybe a projection matrix per RenderTarget
     if (!m_program.SetUniform("projection", m_camera.GetProjectionMatrix(static_cast<float>(m_width) / static_cast<float>(m_height))) ||
         !m_program.SetUniform("view", view_matrix))
     {
         CC_LOG_ERROR("Failed to set camera uniforms in shader.");
         return false;
     }
-    m_program.SetUniform("defaultDirectional", default_directional_light);
+    m_program.SetUniform("defaultDirectional", default_directional_light * Matrix33(view_matrix)); // TODO: Move to defaultMaterial
 
     // Set model uniform and launch draw per model
     for (uint32_t i = 0; i < m_modelMatrices.size(); i++)
@@ -119,10 +123,9 @@ bool RendererBackendOpenGL::RenderAll()
         if (!m_program.SetUniform("model", m_modelMatrices.at(i)) || !m_vaos.at(i)->Draw(GLVAO::DrawType::kTriangles))
         {
             CC_LOG_ERROR("failed to set model matrix uniform or render triangles");
-            return false;
+            continue;
         }
     }
-
     return true;
 }
 

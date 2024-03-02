@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "Engine/Renderer.hpp"
+#include "Engine/Core/Events/KeyboardEvent.hpp"
 #include "Lib.hpp"
 
 struct GLFWwindow;
@@ -18,6 +19,8 @@ struct Window
     DLLEXPORT bool GetSize(float size[2]) const noexcept;
 
     DLLEXPORT Renderer &GetRenderer();
+
+    DLLEXPORT bool IsKeyPressed(KeyboardEvent::Key) const noexcept;
 
     GLFWwindow *GlfwPtr();
 

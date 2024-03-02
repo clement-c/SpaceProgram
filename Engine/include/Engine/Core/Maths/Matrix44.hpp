@@ -42,7 +42,7 @@ struct Matrix44
         auto aimVec = (target - source).Normalized();
         auto sideVec = aimVec.Cross(upVector).Normalized();
         auto upVec = sideVec.Cross(aimVec);
-        return Matrix44(aimVec, upVec, sideVec, Vector3(source));
+        return Matrix44(Vector4(aimVec), Vector4(upVec), Vector4(sideVec), source);
     }
 
     constexpr Matrix44() {}
@@ -87,6 +87,12 @@ struct Matrix44
                                                                             orientMat.a10, orientMat.a11, orientMat.a12, kZero,
                                                                             orientMat.a20, orientMat.a21, orientMat.a22, kZero,
                                                                             pos.x, pos.y, pos.z, pos.w} {}
+
+
+    constexpr operator Matrix33() const
+    {
+        return Matrix33{a00, a01, a02, a10, a11, a12, a20, a21, a22}; // NOT CARTESIAN
+    }
 
     inline Scalar &operator()(uint32_t row, uint32_t comp)
     {

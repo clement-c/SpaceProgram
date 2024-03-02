@@ -23,7 +23,6 @@ Application::Application(int argc, char **argv) : m_windowsManager{}, m_loop{}
 		CC_LOG_ERROR("Could not initialize the windows manager, exiting.");
 		return;
 	}
-
 }
 
 std::filesystem::path Application::GetPath() const
@@ -71,13 +70,12 @@ int Application::Run()
 		// Render windows
 		for (auto win_id = 0; win_id < m_windowsManager.GetNumWindows(); win_id++)
 		{
-			// CC_LOG_DEBUG("Checking whether window #{} has a custom render function\n", win_id);
 			auto *window = m_windowsManager.GetWindow(win_id);
 			if (window)
 			{
 				m_windowsManager.MakeWindowCurrent(win_id);
 				// Render
-				window->GetRenderer().Render();
+				window->GetRenderer().RenderAll();
 				m_windowsManager.SwapBuffers(win_id);
 			}
 		}
@@ -109,17 +107,17 @@ bool Application::Exit(int code)
 	return allWindowsClosed;
 }
 
-Window* const Application::NewWindow()
+Window *const Application::NewWindow()
 {
 	return m_windowsManager.NewWindow();
 }
 
-Window* const Application::NewWindow(uint32_t const w, uint32_t const h)
+Window *const Application::NewWindow(uint32_t const w, uint32_t const h)
 {
 	return m_windowsManager.NewWindow(w, h);
 }
 
-Window* const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
+Window *const Application::NewWindow(uint32_t const w, uint32_t const h, std::string const &title)
 {
 	return m_windowsManager.NewWindow(w, h, title);
 }

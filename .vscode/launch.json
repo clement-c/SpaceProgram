@@ -12,8 +12,7 @@
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
-            "console": "externalTerminal"
+            "environment": []
             // "preLaunchTask": "C/C++: cl.exe build active file"
         },
         {
@@ -24,8 +23,7 @@
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
-            "console": "externalTerminal"
+            "environment": []
             // "preLaunchTask": "C/C++: cl.exe build active file"
         }
     ]

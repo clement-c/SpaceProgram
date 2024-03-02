@@ -54,9 +54,9 @@ public:
     DLLEXPORT bool Initialize(API api = API::kOpenGL45);
 
     // Materials
-    Material& DefaultMaterial() const;
-    Material& NewMaterial(Material::Type);
-    bool BindMaterial(Material const&);
+    Material &DefaultMaterial() const;
+    Material &NewMaterial(Material::Type);
+    bool BindMaterial(Material const &);
 
     // Managing meshes
     DLLEXPORT int32_t Upload(TriangulatedMesh const &);
@@ -67,10 +67,10 @@ public:
     DLLEXPORT bool DeleteEntity(uint32_t mesh_gpu_id);
 
     // Render geometries
-    DLLEXPORT bool Render();
+    DLLEXPORT bool RenderAll() const;
 
     // Camera utils
-    DLLEXPORT bool UpdateCamera(Camera const&) noexcept;
+    DLLEXPORT bool UpdateCamera(Camera const &) noexcept;
     void SetViewport(int width, int height) noexcept;
 
 private:

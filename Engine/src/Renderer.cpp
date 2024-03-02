@@ -42,7 +42,7 @@ bool Renderer::RendererImplements(API api)
 
 bool Renderer::HostSupports(Renderer::API api)
 {
-    return RendererImplements(api) && true; // TODO: implement checking support at runtime if api is implemented
+    return RendererImplements(api); // TODO: implement checking support at runtime if api is implemented
 }
 
 bool Renderer::Initialize(Renderer::API api)
@@ -65,10 +65,14 @@ bool Renderer::Initialize(Renderer::API api)
         if (api == API::kOpenGL45)
         {
             CC_LOG_DEBUG("Initializing renderer with OpenGL 4.5...\n");
-            RendererBackendOpenGL backend;
             m_backend = std::make_unique<RendererBackendOpenGL>();
-            // TODO: check that initialization actually worked before putting in unique_ptr
-            return m_backend->Initialize();
+            if (m_backend->Initialize())
+                return true;
+            else
+            {
+                m_backend = nullptr;
+                return false;
+            }
         }
         else if (api == API::kVulkan)
         {
@@ -83,7 +87,6 @@ bool Renderer::Initialize(Renderer::API api)
         // initialize backend
         return true;
     }
-
 }
 
 int32_t Renderer::Upload(TriangulatedMesh const &mesh)
@@ -105,7 +108,7 @@ bool Renderer::TransformEntity(int32_t mesh_gpu_id, Matrix44 const &transform)
         return false;
 }
 
-bool Renderer::Render()
+bool Renderer::RenderAll() const
 {
     if (m_backend)
         return m_backend->RenderAll();

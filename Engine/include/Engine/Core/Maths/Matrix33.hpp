@@ -133,7 +133,6 @@ struct Matrix33
                                    kZero, kZero, kZero};
     };
 };
-
 constexpr Vector3 operator*(Vector3 const &vec, Matrix33 const &mat)
 {
     return {

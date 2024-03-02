@@ -29,8 +29,7 @@ GLProgram::GLProgram()
 	glCheckError();
 }
 
-
-GLProgram::GLProgram(std::string const& vtxSource, std::string const& fragSource) : GLProgram()
+GLProgram::GLProgram(std::string const &vtxSource, std::string const &fragSource) : GLProgram()
 {
 	SetShader(GLShader::Type::kVertex, vtxSource);
 	SetShader(GLShader::Type::kFragment, fragSource);
@@ -172,7 +171,7 @@ bool GLProgram::Use()
 
 int GLProgram::GetNumActiveUniforms() const
 {
-	if(glIsProgram(m_id))
+	if (glIsProgram(m_id))
 	{
 		return GetInfo(InfoType::kActiveUniforms);
 	}
@@ -204,4 +203,3 @@ bool GLProgram::SetUniform(std::string const uniformName, Vector3 const &value)
 	glCheckError();
 	return true;
 }
-

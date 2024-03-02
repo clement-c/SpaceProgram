@@ -111,8 +111,8 @@ Window *const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std:
 	glfwSetWindowSizeCallback(ptr, [](GLFWwindow *window, int width, int height)
 							  { reinterpret_cast<Window *>(glfwGetWindowUserPointer(window))->WindowResized(width, height); });
 
-	glfwSetKeyCallback(ptr, [](GLFWwindow *w, int key, int scancode, int action, int mods)
-					   { CC_LOG_INFO("--> Key {}\n", key); }); // WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
+	// glfwSetKeyCallback(ptr, [](GLFWwindow *w, int key, int scancode, int action, int mods)
+	// 				   { CC_LOG_INFO("--> Key {}\n", key); }); // WindowsEventsManager::KeyCallback); // [](GLFWwindow* w, int key, int scancode, int action, int mods){ CC_LOG_INFO("--> Key {}\n", key); });
 
 	// glfwSetCharCallback(ptr, [](GLFWwindow*, unsigned int codepoint) { CC_LOG_DEBUG("Char callback {}\n", codepoint); });
 	// glfwSetMouseButtonCallback(ptr, WindowsEventsManager::MouseButtonCallback);
