@@ -25,9 +25,9 @@ Application::Application(int argc, char **argv) : m_windowsManager{}, m_loop{}
 	}
 }
 
-std::filesystem::path Application::GetPath() const
+Path Application::GetPath() const
 {
-	return fs::path(m_args[0]);
+	return Path(m_args[0]);
 }
 
 bool Application::SetLoop(LoopType loop)
@@ -93,8 +93,6 @@ inline bool Application::ShouldExit()
 		allWindowsClosed = allWindowsClosed && (m_windowsManager.WindowShouldClose(i));
 	if (allWindowsClosed)
 		m_shouldExit = true;
-	else
-		m_shouldExit = m_shouldExit;
 	return m_shouldExit;
 }
 

@@ -42,7 +42,7 @@ struct Matrix44
         auto aimVec = (target - source).Normalized();
         auto sideVec = aimVec.Cross(upVector).Normalized();
         auto upVec = sideVec.Cross(aimVec);
-        return Matrix44(Vector4(aimVec), Vector4(upVec), Vector4(sideVec), source);
+        return Matrix44(Vector4(aimVec, kZero), Vector4(upVec, kZero), Vector4(sideVec, kZero), source);
     }
 
     constexpr Matrix44() {}
@@ -88,7 +88,6 @@ struct Matrix44
                                                                             orientMat.a20, orientMat.a21, orientMat.a22, kZero,
                                                                             pos.x, pos.y, pos.z, pos.w} {}
 
-
     constexpr operator Matrix33() const
     {
         return Matrix33{a00, a01, a02, a10, a11, a12, a20, a21, a22}; // NOT CARTESIAN
@@ -119,11 +118,11 @@ struct Matrix44
     bool IsOrthonormal() const noexcept;
     // void Orthonormalize();
 
-    /* constexpr */ Matrix33 SubMatrix(uint32_t tlr, uint32_t tlc);
+    Matrix33 SubMatrix(uint32_t tlr, uint32_t tlc);
     constexpr Scalar Minor(uint32_t i, uint32_t j);
 
     Matrix44 Inverse(bool *success = nullptr) const;
-    Matrix44 InverseOrthonormal() const;
+    DLLEXPORT Matrix44 InverseOrthonormal() const;
     Matrix44 &InvertInPlace(bool *success = nullptr);
     Matrix44 &InvertInPlaceOrthonormal();
 

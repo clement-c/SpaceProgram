@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(SpaceProgram VERSION 0.1 LANGUAGES CXX C)
 
-set(DEFAULT_BUILD_TYPE "Release")
+set(DEFAULT_BUILD_TYPE "Debug")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE STRING "Choose the type of build." FORCE)

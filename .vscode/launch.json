@@ -25,6 +25,17 @@
             "cwd": "${fileDirname}",
             "environment": []
             // "preLaunchTask": "C/C++: cl.exe build active file"
+        },
+        {
+            "name": "03_ObjViewer Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\..\\Install\\Debug\\bin\\03_ObjViewer.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\..\\Install\\Debug\\bin",
+            "environment": []
+            // "preLaunchTask": "C/C++: cl.exe build active file"
         }
     ]
 }

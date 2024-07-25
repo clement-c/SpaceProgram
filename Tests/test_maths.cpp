@@ -3,6 +3,8 @@
 #include <Engine/Core/Maths/Vector3.hpp>
 #include <Engine/Core/Maths/Matrix44.hpp>
 
+#include <Engine/Core/Maths/MathsIO.hpp>
+
 /* ================== MATRIX44 ================== */
 
 TEST(Core_Maths, Matrix44_Init)
@@ -147,8 +149,10 @@ TEST(Core_Maths, Matrix44_AimMatrix)
     Vector4 src{8.2, 3.5, -2.2};
     Vector4 tgt{2.65, -0.56, 5.9};
     Matrix44 a = Matrix44::AimMatrix(src, tgt);
-    Matrix44 b{-0.522340298, -0.38210839, 0.762334526, 0.0, -0.21597968, 0.924117565, 0.315213591, 0.0, -0.824932396, 0, -0.565231442, 0.0, 8.19999981, 3.5, -2.20000005, 1.0};
-    EXPECT_EQ(a, b);
+    Matrix44 b{-0.522340298, -0.38210839, 0.762334526, 0.0, -0.21597968, 0.924117565, 0.315213591, 0.0, -0.824932396, 0, -0.565231442, 0.0, 8.2, 3.5, -2.2, 1.0};
+    std::cout << a << std::endl;
+    std::cout << b << std::endl;
+    EXPECT_TRUE(a == b);
 }
 
 // ===================== VECTOR3 ================== //

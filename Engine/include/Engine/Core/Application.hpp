@@ -1,12 +1,12 @@
 #pragma once
 
-#include <filesystem>
 #include <functional>
 #include <string>
 #include <vector>
 
 #include "Engine/Engine.hpp"
 #include "Engine/Core/Lib.hpp"
+#include "Engine/Core/System/Path.hpp"
 #include "Engine/Core/WindowsManager.hpp"
 
 class Application
@@ -14,11 +14,11 @@ class Application
 public:
 	using LoopType = std::function<bool(Application &, double)>;
 
-	DLLEXPORT Application() = delete;
+	Application() = delete;
 	DLLEXPORT Application(int argc, char **argv);
 	DLLEXPORT ~Application() = default;
 
-	DLLEXPORT std::filesystem::path GetPath() const;
+	DLLEXPORT Path GetPath() const;
 
 	/**
 	 * @brief Set the main loop for the application

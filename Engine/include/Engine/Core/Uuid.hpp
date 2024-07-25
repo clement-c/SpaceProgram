@@ -107,5 +107,4 @@ namespace std
             return seed ^ (hasher(*reinterpret_cast<uint64_t const *>(uuid.bytes.data() + 8)) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
         }
     };
-
 }

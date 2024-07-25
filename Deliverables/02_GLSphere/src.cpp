@@ -6,9 +6,6 @@
 #include <Engine/Runtime/Camera.hpp>
 #include <Engine/Runtime/Geometry/TriangulatedMesh.hpp>
 
-#include <Engine/Core/Maths/MathsIO.hpp>
-#include <iostream>
-
 // Mesh to draw
 #include "rsc/icosphere.hpp"
 

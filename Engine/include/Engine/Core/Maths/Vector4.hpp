@@ -25,7 +25,7 @@ struct Vector4
 
     constexpr Vector4() = default;
     constexpr Vector4(Scalar xx, Scalar yy, Scalar zz, Scalar ww = 1.0) : x{xx}, y{yy}, z{zz}, w{ww} {}
-    constexpr Vector4(Vector3 const &vec) : x{vec.x}, y{vec.y}, z{vec.z}, w{kOne} {}
+    constexpr Vector4(Vector3 const &vec, Scalar w_ = static_cast<Scalar>(1.0)) : x{vec.x}, y{vec.y}, z{vec.z}, w{w_} {}
 
     Vector4 &operator=(Vector3 const &vec)
     {
@@ -83,6 +83,12 @@ constexpr Vector4 &operator-(Vector4 &vec)
 constexpr Vector3 operator-(Vector4 const &vecA, Vector4 const &vecB)
 {
     return vecA.Cartesian() - vecB.Cartesian();
+}
+
+constexpr Vector3 operator+(Vector4 const &ptA, Vector3 const &vecB)
+{
+    auto cartesian = ptA.Cartesian();
+    return Vector4(cartesian.x + vecB.x, cartesian.x + vecB.y, cartesian.x + vecB.z);
 }
 
 constexpr Vector4 operator*(Vector4 const &vec, Scalar scale)

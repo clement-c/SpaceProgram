@@ -77,12 +77,12 @@ struct Matrix33
 
     inline Vector3 &operator[](uint32_t i)
     {
-        *reinterpret_cast<Vector3 *>(&data[3 * i]);
+        return *reinterpret_cast<Vector3 *>(&data[3 * i]);
     }
 
     inline Vector3 const &operator[](uint32_t i) const
     {
-        *reinterpret_cast<Vector3 const *>(&data[3 * i]);
+        return *reinterpret_cast<Vector3 const *>(&data[3 * i]);
     }
 
     constexpr Vector3 Column(uint32_t colId) const

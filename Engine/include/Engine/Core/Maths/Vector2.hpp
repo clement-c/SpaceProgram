@@ -106,11 +106,24 @@ struct Vector2
     }
 
     /**
+     * @brief Returns the clockwise perpendicular vector
+     *
+     * @return Vector2
+     */
+    inline Vector2 PerpendicularCW() const
+    {
+        return Vector2(y, -x);
+    }
+
+    /**
      * @brief Returns the counterclockwise perpendicular vector
      *
      * @return Vector2
      */
-    inline Vector2 Perp() const;
+    inline Vector2 PerpendicularCCW() const
+    {
+        return Vector2(-y, x);
+    }
 
     union
     {
