@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     // winManager.CenterWindow(mainWindowId);
     // winManager.MakeWindowCurrent(mainWindowId);
 
-    // Upload the vertices data to a VBO
+    // UploadMesh the vertices data to a VBO
     float const vertData[] = {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,

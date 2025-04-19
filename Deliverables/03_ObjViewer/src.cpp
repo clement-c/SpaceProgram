@@ -2,16 +2,17 @@
 #include <Engine/Core/Window.hpp>
 #include <Engine/Core/Logging.hpp>
 #include <Engine/Core/System/Path.hpp>
-#include <Engine/Scene.hpp>
+#include <Engine/Scene/Scene.hpp>
 
 #include <Engine/Runtime/Camera.hpp>
 #include <Engine/Core/Maths/MathsIO.hpp>
+
+#include <Engine/Core/System/Args.hpp>
 
 #include <iostream>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
-
 
 bool LoadObj(char const *path, std::vector<TriangulatedMesh> &outMeshes)
 {
@@ -34,7 +35,7 @@ bool LoadObj(char const *path, std::vector<TriangulatedMesh> &outMeshes)
         auto curr_num_face_vertices = shapes[s].mesh.num_face_vertices.size() * 3;
         max_vtx_count = curr_num_face_vertices > max_vtx_count ? curr_num_face_vertices : max_vtx_count;
     }
-    
+
     // reserve buffer for larger
     std::vector<float> mesh_data(max_vtx_count * 8);
 
@@ -48,7 +49,6 @@ bool LoadObj(char const *path, std::vector<TriangulatedMesh> &outMeshes)
         // for each face (triangles as we force triangulation on import)
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
         {
-            // int fv = shapes[s].mesh.num_face_vertices[f];
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
@@ -71,8 +71,7 @@ bool LoadObj(char const *path, std::vector<TriangulatedMesh> &outMeshes)
             index_offset += 3;
         }
 
-        auto &mesh = outMeshes.emplace_back();
-        mesh.SetData(mesh_data.data(), num_verts);
+        outMeshes.emplace_back().SetData(mesh_data.data(), num_verts);
     }
 
     return status;
@@ -80,7 +79,7 @@ bool LoadObj(char const *path, std::vector<TriangulatedMesh> &outMeshes)
 
 int main(int argc, char **argv)
 {
-    int const WIN_WIDTH = 1920 * 0.75, WIN_HEIGHT = 1080 * 0.75;
+    int const WIN_WIDTH = 1920 * 0.9, WIN_HEIGHT = 1080 * 0.9;
 
     Application app(argc, argv);
 
@@ -91,7 +90,6 @@ int main(int argc, char **argv)
         CC_LOG_ERROR("Engine could not initialize.");
         return -1;
     }
-    std::cout << app.GetPath().ToString() << std::endl;
 
     // Open a new window and center it
     Window *const main_window = app.NewWindow(WIN_WIDTH, WIN_HEIGHT, "Deliverable 03 - ObjViewer");
@@ -100,20 +98,21 @@ int main(int argc, char **argv)
     std::vector<TriangulatedMesh> model;
     LoadObj("rsc03/scene.obj", model);
 
-    // Upload mesh
+    // UploadMesh mesh
     auto &renderer = main_window->GetRenderer();
-    int32_t model_id = renderer.Upload(model[0]);
+    int32_t model_id = renderer.UploadMesh(model[0]);
 
     // Set Camera
     Camera camera;
     Vector4 mesh_center = model[0].GetCenter();
-    Matrix44 camMatrix = Matrix44::FromPosition(0.0, mesh_center.y, 7.0);
-    camera.SetViewMatrix(camMatrix.InverseOrthonormal());
+    Matrix44 cam_matrix = Matrix44::FromPosition(0.0, mesh_center.y, 7.0);
+    camera.SetMatrix(cam_matrix);
     renderer.UpdateCamera(camera);
 
-    auto loop = [&camera, &renderer, &camMatrix, model_id](Application &app, double timeSec) -> int {
+    auto loop = [&camera, &renderer, &cam_matrix, model_id](Application &app, double timeSec) -> int
+    {
         Matrix44 rotation = Matrix44(Matrix33::RotationY(static_cast<float>(timeSec * -0.5)));
-        renderer.TransformEntity(model_id, rotation);
+        renderer.TransformItem(model_id, rotation);
         return 0;
     };
     app.SetLoop(loop);

@@ -15,9 +15,8 @@ struct Material
         kCustom = 24
     };
 
-    Material(std::string const &name, Type type);
+    Material(Type type);
 
 private:
-    std::string m_name;
     Type m_type;
 };

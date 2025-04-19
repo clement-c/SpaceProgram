@@ -1,4 +1,5 @@
 #include "Engine/Renderer.hpp"
+#include "Engine/Graphics/RendererBackendI.hpp"
 #include "Engine/Core/Logging.hpp"
 
 #ifdef ENGINE_IMPLEMENTS_OPENGL
@@ -47,9 +48,6 @@ bool Renderer::HostSupports(Renderer::API api)
 
 bool Renderer::Initialize(Renderer::API api)
 {
-    if (m_backend)
-        return true;
-
     if (!RendererImplements(api))
     {
         CC_LOG_ERROR("Engine does not implement the required renderer in this distribution.");
@@ -60,39 +58,50 @@ bool Renderer::Initialize(Renderer::API api)
         CC_LOG_ERROR("Host does not support the required renderer.");
         return false;
     }
-    else
+
+    // if (m_backend != nullptr)
+    //     if (m_backend->GetRendererAPI() == api)
+    //         return true;
+    //     else
+    //     {
+    //         m_backend->Shutdown();
+    //         m_backend = nullptr;
+    //     }
+
+    if (api == API::kOpenGL45)
     {
-        if (api == API::kOpenGL45)
+    #ifdef ENGINE_IMPLEMENTS_OPENGL
+        CC_LOG_DEBUG("Initializing renderer with OpenGL 4.5...\n");
+        m_backend = std::make_unique<RendererBackendOpenGL>();
+        if (m_backend->Initialize())
+            return true;
+        else
         {
-            CC_LOG_DEBUG("Initializing renderer with OpenGL 4.5...\n");
-            m_backend = std::make_unique<RendererBackendOpenGL>();
-            if (m_backend->Initialize())
-                return true;
-            else
-            {
-                m_backend = nullptr;
-                return false;
-            }
-        }
-        else if (api == API::kVulkan)
-        {
-            CC_LOG_ERROR("Vulkan renderer not implemented yet.");
+            m_backend = nullptr;
             return false;
         }
-        else if (api == API::kDirect3D12)
-        {
-            CC_LOG_ERROR("Direct3D renderer not implemented yet.");
-            return false;
-        }
-        // initialize backend
-        return true;
+    #else
+        CC_LOG_ERROR("OpenGL renderer not implemented in this distribution.");
+    #endif
     }
+    else if (api == API::kVulkan)
+    {
+        CC_LOG_ERROR("Vulkan renderer not implemented yet.");
+        return false;
+    }
+    else if (api == API::kDirect3D12)
+    {
+        CC_LOG_ERROR("Direct3D renderer not implemented yet.");
+        return false;
+    }
+    // initialize backend
+    return true;
 }
 
-int32_t Renderer::Upload(TriangulatedMesh const &mesh)
+int32_t Renderer::UploadMesh(TriangulatedMesh const &mesh)
 {
     if (m_backend)
-        return m_backend->Upload(mesh);
+        return m_backend->UploadMesh(mesh);
     else
         return 0;
 }
@@ -100,10 +109,10 @@ int32_t Renderer::Upload(TriangulatedMesh const &mesh)
 // bool SetRenderTarget(Window);
 // bool SetRenderTarget(Framebuffer);
 
-bool Renderer::TransformEntity(int32_t mesh_gpu_id, Matrix44 const &transform)
+bool Renderer::TransformItem(int32_t mesh_gpu_id, Matrix44 const &transform)
 {
     if (m_backend)
-        return m_backend->SetMatrix(mesh_gpu_id, transform);
+        return m_backend->UpdateMeshTransform(mesh_gpu_id, transform);
     else
         return false;
 }
@@ -116,15 +125,16 @@ bool Renderer::RenderAll() const
         return false;
 }
 
-bool Renderer::DisableEntity(uint32_t mesh_gpu_id)
+bool Renderer::DisableItem(uint32_t mesh_gpu_id)
 {
-    CC_LOG_ERROR("Renderer::DisableEntity not implmented");
+
+    CC_LOG_ERROR("Renderer::DisableItem not implemented");
     return false;
 }
 
-bool Renderer::DeleteEntity(uint32_t mesh_gpu_id)
+bool Renderer::DeleteItem(uint32_t mesh_gpu_id)
 {
-    CC_LOG_ERROR("Renderer::DeleteEntity not implmented");
+    CC_LOG_ERROR("Renderer::DeleteItem not implemented");
     return false;
 }
 

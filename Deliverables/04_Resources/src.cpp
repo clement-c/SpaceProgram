@@ -26,18 +26,11 @@ int main(int argc, char **argv)
     auto &resource_manager = engine.GetResourceManager();
 
     // Queue assets for loading
-    auto& loader = resource_manager.NewLoader();
+    auto &loader = resource_manager.NewLoader();
 
     AssetRef sun_asset = loader.Enqueue("rsc/sun.entity");
-    loader.Enqueue("rsc/mercury.entity");
-    loader.Enqueue("rsc/venus.entity");
     loader.Enqueue("rsc/earth.entity");
-    loader.Enqueue("rsc/mars.entity");
-    loader.Enqueue("rsc/jupiter.entity");
-    loader.Enqueue("rsc/saturn.entity");
-    loader.Enqueue("rsc/uranus.entity");
-    loader.Enqueue("rsc/neptune.entity");
-    // Allow loader.Enqueue("rsc/*.entity"); ? More likely have an index
+    loader.Enqueue("rsc/moon.entity");
 
     // Handle loader events
     loader.OnLoadProgress([](int bytes_loaded, int bytes_total)
@@ -47,15 +40,20 @@ int main(int argc, char **argv)
                            return false; // return true to stop further loading
                        });
 
-    // Can build the scene already with the refs
+    // Can build the scene already with the refs, loading as needed
     Scene scene;
     scene.AddEntity(sun_asset);
     scene.AddEntity("rsc/venus.entity");
 
+    // Can also load from scene's own loader, resources destroyed with Scene
+    // scene.GetResourceManager().Enqueue();
+    // When loaded, scene forces loading resources, locking until resource is loaded
+
     loader.OnLoadComplete([&engine, &scene]()
                           { engine.SetScene(scene); });
     // can (should) be launched in another thread, blocking
-    loader.Load();
+    // scene.PreLoad(); // On another thread
+    scene.Activate(false /* differed */); // Locking main thread until loaded
 
     return app.Run();
 }

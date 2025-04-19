@@ -5,17 +5,20 @@
 #include <stdint.h>
 
 #include "Core/Lib.hpp"
+#include "Core/Color.hpp"
+#include "Runtime/Material.hpp"
 #include "Graphics/RendererBackendI.hpp"
-#include "Graphics/Material.hpp"
 
 // Manipulated objects
 struct Camera;
-struct Material;
 struct Matrix44;
 struct TriangulatedMesh;
 
-// Interface
 
+/**
+ * @brief One renderer per window/context
+ *
+ */
 class Renderer
 {
 public:
@@ -24,6 +27,11 @@ public:
         kVulkan,
         kOpenGL45,
         kDirect3D12
+    };
+
+    struct RenderOptions
+    {
+        Color clear_color;
     };
 
     /**
@@ -52,22 +60,27 @@ public:
      * @return false
      */
     DLLEXPORT bool Initialize(API api = API::kOpenGL45);
+    DLLEXPORT bool IsInitialized() const { return m_backend != nullptr; }
+    DLLEXPORT void Shutdown();
+    // DLLEXPORT void Restart() { Shutdown(); Initialize(); }
 
     // Materials
     Material &DefaultMaterial() const;
-    Material &NewMaterial(Material::Type);
+    // Material &NewMaterial(Material::Type);
     bool BindMaterial(Material const &);
 
     // Managing meshes
-    DLLEXPORT int32_t Upload(TriangulatedMesh const &);
+    DLLEXPORT int32_t UploadMesh(TriangulatedMesh const &);
 
-    DLLEXPORT bool TransformEntity(int32_t mesh_gpu_id, Matrix44 const &transform);
-
-    DLLEXPORT bool DisableEntity(uint32_t mesh_gpu_id);
-    DLLEXPORT bool DeleteEntity(uint32_t mesh_gpu_id);
+    /** TODO: Move to "Renderable" Entity */
+    DLLEXPORT bool TransformItem(int32_t mesh_gpu_id, Matrix44 const &transform);
+    DLLEXPORT bool DisableItem(uint32_t mesh_gpu_id);
+    DLLEXPORT bool DeleteItem(uint32_t mesh_gpu_id);
 
     // Render geometries
+    // Simplified, need to allow options for depthbuffer clearing for example, and render subset of items
     DLLEXPORT bool RenderAll() const;
+    DLLEXPORT bool Render(/* items, material, RenderSurface& render_surface, RenderOptions conts& options */) const;
 
     // Camera utils
     DLLEXPORT bool UpdateCamera(Camera const &) noexcept;

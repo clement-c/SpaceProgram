@@ -5,14 +5,15 @@
 
 #include "checkError.hpp"
 
-GLBuffer::GLBuffer(Type tp) : m_type{ static_cast<int>(tp) } {
+GLBuffer::GLBuffer(Type tp) : m_type{static_cast<int>(tp)}
+{
     glGenBuffers(1, &m_id);
     glCheckError();
 }
 
 GLBuffer::~GLBuffer()
 {
-    if(glIsBuffer(m_id))
+    if (glIsBuffer(m_id))
         glDeleteBuffers(1, &m_id);
 }
 
@@ -30,7 +31,7 @@ bool GLBuffer::Unbind()
     return true;
 }
 
-bool GLBuffer::SetData(float const* data, size_t bufferSize, GLBuffer::Usage usage)
+bool GLBuffer::SetData(float const *data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
     m_length = bufferSize / sizeof(float);
@@ -41,7 +42,7 @@ bool GLBuffer::SetData(float const* data, size_t bufferSize, GLBuffer::Usage usa
     return true;
 }
 
-bool GLBuffer::SetData(unsigned int const* data, size_t bufferSize, GLBuffer::Usage usage)
+bool GLBuffer::SetData(unsigned int const *data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
     m_length = bufferSize / sizeof(unsigned int);
@@ -52,7 +53,7 @@ bool GLBuffer::SetData(unsigned int const* data, size_t bufferSize, GLBuffer::Us
     return true;
 }
 
-bool GLBuffer::SetData(int const* data, size_t bufferSize, GLBuffer::Usage usage)
+bool GLBuffer::SetData(int const *data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
     m_length = bufferSize / sizeof(int);
@@ -63,7 +64,7 @@ bool GLBuffer::SetData(int const* data, size_t bufferSize, GLBuffer::Usage usage
     return true;
 }
 
-bool GLBuffer::SetData(double const* data, size_t bufferSize, GLBuffer::Usage usage)
+bool GLBuffer::SetData(double const *data, size_t bufferSize, GLBuffer::Usage usage)
 {
     Bind();
     m_length = bufferSize / sizeof(double);

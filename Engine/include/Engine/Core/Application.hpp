@@ -9,6 +9,8 @@
 #include "Engine/Core/System/Path.hpp"
 #include "Engine/Core/WindowsManager.hpp"
 
+#include "System/Args.hpp"
+
 class Application
 {
 public:
@@ -18,6 +20,7 @@ public:
 	DLLEXPORT Application(int argc, char **argv);
 	DLLEXPORT ~Application() = default;
 
+	DLLEXPORT ArgsDefinition &GetArgsDefintion();
 	DLLEXPORT Path GetPath() const;
 
 	/**
@@ -43,6 +46,7 @@ protected:
 	inline bool ShouldExit();
 
 private:
+	ArgsDefinition m_argsdef;
 	std::vector<std::string> m_args;
 
 	WindowsManager m_windowsManager;

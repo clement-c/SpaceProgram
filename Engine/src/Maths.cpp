@@ -5,9 +5,153 @@
 
 // ====================== VECTOR3 ======================
 
-Vector3::operator Vector4()
+// constexpr Vector3::Vector3(Scalar xx, Scalar yy, Scalar zz) : x{xx}, y{yy}, z{zz} {}
+
+constexpr Vector3::operator Vector4() const
 {
-    return Vector4{x, y, z, kOne};
+    return Vector4(x, y, z, kOne);
+}
+
+constexpr Scalar &Vector3::operator[](uint32_t i)
+{
+    return data[i];
+}
+
+Vector3 &Vector3::operator+=(Vector3 const &other) noexcept
+{
+    x += other.x;
+    y += other.y;
+    z += other.z;
+    return *this;
+}
+
+Vector3 &Vector3::operator-=(Vector3 const &other) noexcept
+{
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
+    return *this;
+}
+
+Vector3 &Vector3::operator*=(Scalar scale) noexcept
+{
+    x *= scale;
+    y *= scale;
+    z *= scale;
+    return *this;
+}
+
+Vector3 &Vector3::operator/=(Scalar scale)
+{
+    x /= scale;
+    y /= scale;
+    z /= scale;
+    return *this;
+}
+
+constexpr Vector3 Vector3::Scaled(Scalar const scale) const
+{
+    return Vector3{x * scale, y * scale, z * scale};
+}
+
+inline Vector3 &Vector3::Scale(Scalar const scale)
+{
+    x *= scale;
+    y *= scale;
+    z *= scale;
+    return *this;
+}
+
+constexpr Vector3 Vector3::Negated() const
+{
+    return Scaled(static_cast<Scalar>(-1.0));
+}
+
+inline Vector3 &Vector3::Negate()
+{
+    return Scale(static_cast<Scalar>(-1.0));
+}
+
+constexpr Scalar Vector3::Dot(Vector3 const &other) const noexcept(true)
+{
+    return (x * other.x + y * other.y + z * other.z);
+}
+
+constexpr Vector3 Vector3::Cross(Vector3 const &other) const noexcept
+{
+    return Vector3(
+        y * other.z - other.y * z, z * other.x - other.z * x, x * other.y - y * other.x);
+}
+
+constexpr Scalar Vector3::MagnitudeSquared() const
+{
+    return Dot(*this);
+}
+
+inline Scalar Vector3::Magnitude() const noexcept
+{
+    return std::sqrt(MagnitudeSquared());
+}
+
+Vector3 &Vector3::Normalize()
+{
+    Scalar r = (Scalar)1.0f / Magnitude();
+    x *= r;
+    y *= r;
+    z *= r;
+    return *this;
+}
+
+inline Vector3 Vector3::Normalized() const
+{
+    return Vector3(*this).Normalize();
+}
+
+inline Vector3 Vector3::Project(Vector3 const &onto) const
+{
+    return onto.Scaled((*this).Dot(onto) / onto.MagnitudeSquared());
+}
+
+// ====================== VECTOR4 ======================
+
+constexpr Vector4::Vector4(Scalar xx, Scalar yy, Scalar zz, Scalar ww) : x{xx}, y{yy}, z{zz}, w{ww} {}
+constexpr Vector4::Vector4(Vector3 const &vec, Scalar w_) : x{vec.x}, y{vec.y}, z{vec.z}, w{w_} {}
+
+Vector4 &Vector4::operator=(Vector3 const &vec)
+{
+    x = vec.x;
+    y = vec.y;
+    z = vec.z;
+    w = kOne;
+    return *this;
+}
+
+Vector4 &Vector4::Homogenize()
+{
+    if (w != kZero)
+    {
+        auto ratio = kOne / w;
+        x *= ratio;
+        y *= ratio;
+        z *= ratio;
+        w = kOne;
+    }
+    return *this;
+}
+
+constexpr Vector3 Vector4::Cartesian() const
+{
+    if (w != kZero)
+    {
+        auto ratio = kOne / w;
+        return Vector3{x * ratio, y * ratio, z * ratio};
+    }
+    return Vector3{x, y, z};
+}
+
+constexpr Vector4::operator Vector3() const
+{
+    return Vector3{x, y, z}; // NOT CARTESIAN
 }
 
 // ====================== MATRIX44 ======================

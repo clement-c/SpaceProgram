@@ -10,14 +10,36 @@
 /* 16 * 16 */
 struct Uuid
 {
+    /**
+     * @brief Converts a string representation of a UUID to a Uuid object.
+     * 
+     * @param str The string representation of the UUID. It must be either 32 characters
+     *            (without dashes) or 36 characters (with dashes in the format 8-4-4-4-12).
+     * @return Uuid The Uuid object created from the string.
+     * 
+     * @throws std::invalid_argument If the input string is empty.
+     * @throws std::invalid_argument If the input string is not of length 32 or 36.
+     * @throws std::invalid_argument If the input string does not follow the UUID format
+     *                                (e.g., invalid characters or misplaced dashes).
+     */
     static Uuid FromString(std::string const &str)
     {
-        Uuid uuid;
-        bool noHyphens = false;
-        if (str.length() == 32)
-            noHyphens = true;
-        else if (str.length() != 36)
+        if (str.empty())
+            throw std::invalid_argument("String is empty");
+
+        // Check if the string is a valid UUID format (8-4-4-4-12)
+        if (str.length() != 36 && str.length() != 32)
             throw std::invalid_argument("String must be of length 32 or 36 in order to convert to uuid");
+
+        for (size_t i = 0; i < str.length(); i++)
+        {
+            if ((i + 1) % 3 == 0 && str.at(i) != '-')
+                throw std::invalid_argument("Invalid UUID format, expected '-' at position " + std::to_string(i));
+            else if ((i + 1) % 3 != 0 && !isxdigit(str.at(i)))
+                throw std::invalid_argument("Invalid UUID format, expected hex digit at position " + std::to_string(i));
+        }
+
+        Uuid uuid;
 
         uint32_t pos = 0;
         for (uint32_t i = 0; i < 36; i++)
@@ -33,6 +55,18 @@ struct Uuid
         return uuid;
     }
 
+    /**
+     * @brief Converts the UUID to its string representation.
+     * 
+     * This function formats the UUID as a string in the standard 8-4-4-4-12
+     * hexadecimal format, separated by hyphens. Each byte of the UUID is
+     * represented as a two-digit hexadecimal number.
+     * 
+     * @return A string representing the UUID in the format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.
+     *         For example: "123e4567-e89b-12d3-a456-426614174000".
+     * 
+     * @note This function is marked as `noexcept` and guarantees not to throw exceptions.
+     */
     std::string ToString() const noexcept
     {
         std::ostringstream ss;
@@ -76,6 +110,7 @@ Uuid Uuid_v4()
 {
     Uuid uuid{};
     RNG::Fill(uuid.bytes);
+    // Set the variant field to RFC 4122-compliant (10xxxxxx).
     uuid.bytes[6] = (uuid.bytes[6] & 0x0f) | 0x40;
     uuid.bytes[8] = (uuid.bytes[8] & 0x3f) | 0x80;
     return uuid;

@@ -9,7 +9,10 @@ struct Xfo
  
     Vector4 Position() const noexcept;
  
-    Vector3 Scale() const noexcept;
+    Vector3 Scale() const noexcept
+    {
+        return m_scale;
+    }
 
 public:
     Quaternion m_rotation;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -42,30 +44,51 @@ protected:
     Value m_defaultValue;
 };
 
-struct ArgumentsDefinition
+struct ArgsParsed
+{
+    Path ApplicationPath() const;
+
+    std::vector<Value> Positionals() const;
+
+    std::vector<Flag> const &DefinedFlags();
+    bool HasFlag(std::string const &name);
+    bool HasFlag(Flag const &flag);
+
+    Value GetValue(Flag const &param_name);
+    Value GetValue(std::string const &param_name);
+
+private:
+    std::vector<Flag> m_defined_flags;
+    std::vector<Value> m_values;
+};
+
+struct ArgsDefinition
 {
 
-    Flag &AddFlag(std::string shortNm)
+    ArgsDefinition &AddFlag(std::string shortNm)
     {
         if (HasFlag(shortNm))
             throw std::runtime_error("A flag is already defined with the short name \"" + shortNm + "\"");
-        return m_flags.emplace_back(shortNm);
+        m_flags.emplace_back(shortNm);
+        return *this;
     }
-    Flag &AddFlag(std::string shortNm, std::string const &longNm)
+    ArgsDefinition &AddFlag(std::string shortNm, std::string const &longNm)
     {
         if (HasFlag(shortNm))
             throw std::runtime_error("A flag is already defined with the short name \"" + shortNm + "\"");
         if (HasFlag(longNm))
             throw std::runtime_error("A flag is already defined with the long name \"" + longNm + "\"");
-        return m_flags.emplace_back(shortNm, longNm);
+        m_flags.emplace_back(shortNm, longNm);
+        return *this;
     }
-    Flag &AddFlag(std::string shortNm, std::string const &longNm, std::string const &help)
+    ArgsDefinition &AddFlag(std::string shortNm, std::string const &longNm, std::string const &help)
     {
         if (HasFlag(shortNm))
             throw std::runtime_error("A flag is already defined with the short name \"" + shortNm + "\"");
         if (HasFlag(longNm))
             throw std::runtime_error("A flag is already defined with the long name \"" + longNm + "\"");
-        return m_flags.emplace_back(shortNm, longNm, help);
+        m_flags.emplace_back(shortNm, longNm, help);
+        return *this;
     }
 
     bool HasFlag(std::string const &flag) const
@@ -74,54 +97,88 @@ struct ArgumentsDefinition
         {
             if (flag.substr(1, 1) == "-")
                 return std::any_of(m_flags.cbegin(), m_flags.cend(), [&flag](Flag const &f) -> bool
-                                   { f.LongName == flag; });
+                                   { return f.LongName == flag; });
             else
                 return std::any_of(m_flags.cbegin(), m_flags.cend(), [&flag](Flag const &f) -> bool
-                                   { f.ShortName == flag; });
+                                   { return f.ShortName == flag; });
         }
         else
         {
             std::string sn = "-" + flag;
             std::string ln = "--" + flag;
             return std::any_of(m_flags.cbegin(), m_flags.cend(), [&](Flag const &f) -> bool
-                               { f.ShortName == sn || f.LongName == ln; });
+                               { return f.ShortName == sn || f.LongName == ln; });
         }
         return false;
     }
 
-    Argument &AddArgument(std::string shortNm, Type &type)
-    { // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm), type);
+    ArgsDefinition &AddArgument(std::string shortNm, Type &type, bool multi = false)
+    {
+        m_args.emplace_back(Flag(shortNm), type, multi);
+        return *this;
     }
-    Argument &AddArgument(std::string shortNm, std::string const &longNm, Type &type)
-    { // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm, longNm), type);
+    ArgsDefinition &AddArgument(std::string shortNm, std::string const &longNm, Type &type, bool multi = false)
+    {
+        m_args.emplace_back(Flag(shortNm, longNm), type, multi);
+        return *this;
     }
-    Argument &AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Type &type)
-    { // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm, longNm, help), type);
+    ArgsDefinition &AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Type &type, bool multi = false)
+    {
+        m_args.emplace_back(Flag(shortNm, longNm, help), type, multi);
+        return *this;
     }
-    Argument &AddArgument(std::string shortNm, Value const &defaultValue)
-    {                                                                      // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+    ArgsDefinition &AddArgument(std::string shortNm, Value const &defaultValue)
+    {                                                               // TODO: Multi
+        m_args.emplace_back(Flag(shortNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+        return *this;
     }
-    Argument &AddArgument(std::string shortNm, std::string const &longNm, Value const &defaultValue)
-    {                                                                              // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm, longNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+    ArgsDefinition &AddArgument(std::string shortNm, std::string const &longNm, Value const &defaultValue)
+    {                                                                       // TODO: Multi
+        m_args.emplace_back(Flag(shortNm, longNm), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+        return *this;
     }
-    Argument &AddArgument(std::string shortNm, std::string const &longNm, std::string const &help, Value const &defaultValue)
-    {                                                                                    // TODO: Multi
-        return m_args.emplace_back(Flag(shortNm, longNm, help), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+    ArgsDefinition &AddArgument(std::string shortNm, std::string const &longNm, Value const &defaultValue, std::string const &help)
+    {                                                                             // TODO: Multi
+        m_args.emplace_back(Flag(shortNm, longNm, help), defaultValue.GetType()); // FIXME: when value works, set value - currently only default values
+        return *this;
+    }
+
+    bool PrintHelp(std::ostream &ostream) const;
+
+    bool ParseArgs(int argc, char *argv[], ArgsParsed &out_results)
+    {
+        ;
+
+        Path app_path{std::string(argv[0])};
+
+        char *curr_flag = nullptr;
+        for (auto i = 1u; i < argc; i++)
+        {
+            // std::cout << i << ": " << argv[i] << std::endl;
+            char *curr_arg = argv[i];
+            if (curr_arg[0] == '-')
+            {
+                if (HasFlag(curr_arg))
+                {
+                    curr_flag = curr_arg;
+                    std::cout << '\n'
+                              << curr_flag << ": ";
+                }
+            }
+            else if (curr_flag)
+            {
+                std::cout << curr_arg << ", ";
+            }
+            else
+            {
+                std::cout << "\nPositional: " << curr_arg << std::endl;
+            }
+        }
+
+        return true;
     }
 
 private:
     std::vector<Flag> m_flags;
     std::vector<Argument> m_args; // TODO: Mendatory args
 };
-
-bool Parse(ArgumentsDefinition const &definition, int argc, char const *argv[])
-{
-    Path app_path{std::string(argv[0])};
-
-    return false;
-}

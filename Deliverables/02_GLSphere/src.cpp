@@ -31,19 +31,19 @@ int main(int argc, char **argv)
 
     // Set a static camera
     Camera camera;
-    Matrix44 viewMatrix = Matrix44::FromPosition(0.f, .0f, -7.0f);
-    camera.SetViewMatrix(viewMatrix);
+    Matrix44 viewMatrix = Matrix44::FromPosition(0.f, .0f, 7.0f);
+    camera.SetMatrix(viewMatrix);
     renderer.UpdateCamera(camera);
 
-    // Upload mesh to the GPU
+    // UploadMesh mesh to the GPU
     int planet_gpu_id = -1;
     int moon_gpu_id = -1;
     {
         // Create and upload mesh
         TriangulatedMesh sphere;
         sphere.SetData(Icosphere, sizeof(Icosphere) / 8 / sizeof(float)); // array of floats, 8 per face-vertex (p:xyz, n:xyz, t:uv)
-        planet_gpu_id = renderer.Upload(sphere);
-        moon_gpu_id = renderer.Upload(sphere);
+        planet_gpu_id = renderer.UploadMesh(sphere);
+        moon_gpu_id = renderer.UploadMesh(sphere);
     }
 
     // Moon is scaled 0.2, translated 3.5
@@ -70,14 +70,16 @@ int main(int argc, char **argv)
         else if (main_window->IsKeyPressed(KeyboardEvent::Key::KeyRight))
             rotate -= 0.02f;
 
-        auto view_matrix = Matrix44(Matrix33::RotationY(rotate)) * Matrix44::FromPosition(0.f, .0f, -7.0f); // Checked, this is correct
-        camera.SetViewMatrix(view_matrix);
+        auto M_R = Matrix44(Matrix33::RotationY(rotate)); // Checked, this is correct
+        auto M_T = Matrix44::FromPosition(0.f, .0f, 7.0f);
+        auto view_matrix = M_T * M_R;
+        camera.SetMatrix(view_matrix);
 
         renderer.UpdateCamera(camera);
 
         // Transform a mesh already uploaded to GPU using its ID in the renderer
-        renderer.TransformEntity(planet_gpu_id, rotation);
-        renderer.TransformEntity(moon_gpu_id, moon_base_transf * rotation);
+        renderer.TransformItem(planet_gpu_id, rotation);
+        renderer.TransformItem(moon_gpu_id, moon_base_transf * rotation);
         return 0;
     };
     app.SetLoop(loop);

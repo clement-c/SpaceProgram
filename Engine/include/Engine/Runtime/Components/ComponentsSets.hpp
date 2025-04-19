@@ -1,3 +1,6 @@
+#pragma once
+#include <cstdint>
+
 // Helper structs to group the components together, to register them by batch more easily
 
 struct ComponentsSets

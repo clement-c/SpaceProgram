@@ -25,7 +25,7 @@ struct Window
     GLFWwindow *GlfwPtr();
 
     friend struct WindowsManager;
-
+ 
 private:
     void WindowResized(int width, int height);
 

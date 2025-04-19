@@ -1,4 +1,4 @@
-#include "Engine/Scene.hpp"
+#include "Engine/Scene/Scene.hpp"
 
 Scene::Scene(InitOptions&& options)
 {

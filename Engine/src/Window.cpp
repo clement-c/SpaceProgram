@@ -3,6 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
+
 Window::Window(GLFWwindow *ptr) : m_ptr{ptr}
 {
 	glfwSetWindowUserPointer(ptr, reinterpret_cast<void *>(this));
@@ -40,14 +41,13 @@ bool Window::GetSize(int *width, int *height) const noexcept
 
 bool Window::IsKeyPressed(KeyboardEvent::Key key) const noexcept
 {
-	if(m_ptr)
+	if (m_ptr)
 	{
 		auto state = glfwGetKey(m_ptr, static_cast<int32_t>(key));
 		return state == GLFW_PRESS;
 	}
 	return false;
 }
-
 
 GLFWwindow *Window::GlfwPtr()
 {

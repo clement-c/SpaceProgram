@@ -9,6 +9,6 @@ struct SystemEvent
 
         // Game controller
         kGameControllerConnected,
-        kGameControllerDisconnected,
+        kGameControllerDisconnected
     };
 };

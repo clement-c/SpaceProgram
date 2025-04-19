@@ -7,7 +7,6 @@
 #include "System.hpp"
 
 #include "Core/Lib.hpp"
-#include "Runtime/ComponentsSets.hpp"
 
 class Engine
 {

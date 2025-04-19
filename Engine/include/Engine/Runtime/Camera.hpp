@@ -19,8 +19,16 @@ public:
 	DLLEXPORT Camera &SetFarPlane(float far_plane);
 
 	DLLEXPORT Matrix44 GetProjectionMatrix(float aspectRatio);
+	DLLEXPORT Matrix44 GetProjectionMatrix(float width, float height) { return GetProjectionMatrix(width / height); }
 
-	DLLEXPORT void SetViewMatrix(Matrix44 const &mat);
+	DLLEXPORT void SetViewMatrix(Matrix44 const &mat) { m_viewMatrix = mat; m_dirtyView = true; }
+	/**
+	 * @brief Set the transfor of the camera, must be an orthonormal matrix
+	 * 
+	 * @param mat 
+	 * @return DLLEXPORT 
+	 */
+	DLLEXPORT void SetMatrix(Matrix44 const &mat);
 	DLLEXPORT Matrix44 GetViewMatrix();
 
 private:

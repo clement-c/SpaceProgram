@@ -11,10 +11,11 @@ public:
 
     virtual bool Initialize() final;
 
-    virtual uint32_t Upload(TriangulatedMesh const &) final;
-    virtual bool Free(uint32_t) final;
-    virtual bool SetMatrix(int32_t mesh_gpu_id, Matrix44 const &transform) final;
+    virtual uint32_t UploadMesh(TriangulatedMesh const &) final;
+    virtual bool UpdateMeshTransform(int32_t mesh_gpu_id, Matrix44 const &transform) final;
     virtual bool RenderAll() final;
+    virtual bool FreeMesh(uint32_t) final;
+    // virtual bool FreeTexture(uint32_t) final;
 
     virtual void SetViewport(int w, int h) final;
 

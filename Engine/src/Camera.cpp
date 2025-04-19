@@ -49,14 +49,9 @@ Matrix44 Camera::GetProjectionMatrix(float aspectRatio)
     return m_projectionMatrix;
 }
 
-/**
- * @brief Must be inverse of camera world matrix
- * 
- * @param mat inverse of workdSpace camera matrix
- */
-void Camera::SetViewMatrix(Matrix44 const &mat)
+void Camera::SetMatrix(Matrix44 const &mat)
 {
-    m_viewMatrix = mat;
+    m_viewMatrix = mat.InverseOrthonormal();
 }
 
 Matrix44 Camera::GetViewMatrix()

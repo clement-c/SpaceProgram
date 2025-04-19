@@ -28,7 +28,7 @@ struct AABB
         return Min + (Max - Min) * 0.5;
     }
 
-    inline AABB& Expand(Vector4 const& point)
+    inline AABB &Expand(Vector4 const &point)
     {
         Min.x = (point.x < Min.x ? point.x : Min.x);
         Min.y = (point.y < Min.y ? point.y : Min.y);
@@ -39,19 +39,18 @@ struct AABB
         return *this;
     }
 
-    inline bool Contains(Vector3 const& pt)
+    inline bool Contains(Vector3 const &pt)
     {
         return pt.x >= Min.x && pt.x <= Max.x && pt.y >= Min.y && pt.y <= Max.y && pt.z >= Min.z && pt.z <= Max.z;
     }
 
-    inline bool Contains(Vector4 const& pt)
+    inline bool Contains(Vector4 const &pt)
     {
         return Contains(Vector3(pt));
     }
 
-    inline bool Contains(AABB const& bb)
+    inline bool Contains(AABB const &bb)
     {
         return Contains(bb.Min) && Contains(bb.Max);
     }
-
 };

@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
+#include <type_traits>
 #include "Type.hpp"
 #include "Engine/Core/Maths/Vector3.hpp"
 #include "Engine/Core/Maths/Matrix44.hpp"
 
-struct Serializer;
 struct Null
 {
 };
@@ -12,12 +12,21 @@ struct Null
 struct Value
 {
     Value() = delete;
+    Value(Type typ) : m_type{typ} {}
     template <typename T>
-    Value(T value) : m_type{GetType_s<T>()}, m_impl{new internal_implementation<T>(std::move(value))} {}
+    Value(T const& value) : m_type{GetType_s<T>()}, m_impl{new internal_implementation<std::remove_reference<T>::type>(std::move(value))} {}
     Value(Value const &value) : m_type{value.m_type}, m_impl{value.m_impl->Clone()} {}
+
+    Value& operator=(Value const& other)
+    {
+        m_type = other.m_type;
+        m_impl.reset(other.m_impl->Clone());
+        return *this;
+    }
 
     std::ostream &Print(std::ostream &os) const { return m_impl->Print(os); }
 
+    bool IsNull() const { return m_impl == nullptr; }
     float AsBool() const { return m_impl->AsBool(); }
     float AsFloat() const { return m_impl->AsFloat(); }
     double AsDouble() const { return m_impl->AsDouble(); }
@@ -49,8 +58,8 @@ protected:
     class internal_implementation : public internal_interface
     {
     public:
-        // internal_implementation(T&& v) : value{std::forward<T>(v)} {}
-        internal_implementation(T v) : value{std::move(v)} {}
+        internal_implementation(T&& v) noexcept : value{std::forward<T>(v)} {}
+        internal_implementation(T v) : value{v} {}
         virtual ~internal_implementation() {}
 
         std::ostream &Print(std::ostream &os) const { return os << value; }

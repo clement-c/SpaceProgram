@@ -53,7 +53,20 @@ bool RendererBackendOpenGL::Initialize()
     return m_program.Link();
 }
 
-uint32_t RendererBackendOpenGL::Upload(TriangulatedMesh const &mesh)
+bool RendererBackendOpenGL::Shutdown()
+{
+    CC_LOG_DEBUG("  RendererBackendOpenGL::Shutdown()\n");
+    for (auto vao : m_vaos)
+    {
+        if (vao)
+            delete vao;
+    }
+    m_vaos.clear();
+    return true;
+}
+
+
+uint32_t RendererBackendOpenGL::UploadMesh(TriangulatedMesh const &mesh)
 {
     CC_LOG_DEBUG("Uploading mesh using OpenGL backend...\n");
     GLBuffer mesh_buffer;
@@ -73,7 +86,13 @@ uint32_t RendererBackendOpenGL::Upload(TriangulatedMesh const &mesh)
     return m_vaos.size() - 1;
 }
 
-bool RendererBackendOpenGL::Free(uint32_t index)
+uint32_t RendererBackendOpenGL::UploadTexture(Texture const &mesh)
+{
+    CC_LOG_DEBUG("Uploading texture using OpenGL backend...\n");
+    return 0;
+}
+
+bool RendererBackendOpenGL::FreeMesh(uint32_t index)
 {
     if (m_vaos.at(index))
     {
@@ -84,7 +103,7 @@ bool RendererBackendOpenGL::Free(uint32_t index)
     return false;
 }
 
-bool RendererBackendOpenGL::SetMatrix(int32_t mesh_gpu_id, Matrix44 const &transform)
+bool RendererBackendOpenGL::UpdateMeshTransform(int32_t mesh_gpu_id, Matrix44 const &transform)
 {
     m_modelMatrices.at(mesh_gpu_id) = transform;
     return true;
@@ -115,7 +134,7 @@ bool RendererBackendOpenGL::RenderAll()
         CC_LOG_ERROR("Failed to set camera uniforms in shader.");
         return false;
     }
-    m_program.SetUniform("defaultDirectional", default_directional_light * Matrix33(view_matrix)); // TODO: Move to defaultMaterial
+    m_program.SetUniform("defaultDirectional", default_directional_light); // TODO: Move to defaultMaterial
 
     // Set model uniform and launch draw per model
     for (uint32_t i = 0; i < m_modelMatrices.size(); i++)
