@@ -7,7 +7,7 @@
 // Loader Implementation
 // ============================================================================
 
-Loader::Loader() : m_nextUUID(0), m_progress_cb(nullptr), m_error_cb(nullptr), m_complete_cb(nullptr)
+Loader::Loader() : m_nextUUID(0)
 {
     // UUIDs start at 0 and increment. INVALID_UUID (-1) is reserved for unassigned assets.
 }
@@ -200,7 +200,8 @@ bool Loader::LoadAsset(AssetRef &asset)
 {
     // For now, just check if the file exists
     // Real implementation would load actual data based on asset type
-    std::ifstream file(asset.path);
+    std::string filepath = asset.path;
+    std::ifstream file(filepath);
     if (!file.good())
     {
         CC_LOG_ERROR("Loader::LoadAsset: File '{}' does not exist\n", asset.path);
