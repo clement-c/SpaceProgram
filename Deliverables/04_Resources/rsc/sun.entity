@@ -1,0 +1,24 @@
+{
+  "name": "Sun",
+  "components": {
+    "transform": {
+      "position": [0.0, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "scale": [2.0, 2.0, 2.0]
+    },
+    "mesh": {
+      "type": "sphere",
+      "radius": 1.0
+    },
+    "material": {
+      "type": "solid",
+      "color": [1.0, 0.9, 0.2, 1.0],
+      "emissive": true
+    },
+    "light": {
+      "type": "point",
+      "intensity": 1.0,
+      "color": [1.0, 0.9, 0.8]
+    }
+  }
+}

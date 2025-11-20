@@ -4,7 +4,7 @@
 
 Engine::InitOptions const Engine::kDefaultInitOptions{};
 
-Engine::Engine() {}
+Engine::Engine() : m_activeScene(nullptr) {}
 
 bool Engine::Initialize() { return Initialize(Engine::kDefaultInitOptions); }
 
@@ -29,4 +29,12 @@ bool Engine::IsInitialized() const { return m_initialized; };
 ResourceManager &Engine::GetResourceManager()
 {
     return m_rsc_manager;
+}
+
+void Engine::SetScene(Scene const& scene)
+{
+    CC_LOG_DEBUG("Engine::SetScene: Setting active scene\n");
+    // TODO: Store scene properly - for now just log
+    // In a real implementation, we'd copy or reference the scene
+    // m_activeScene = &scene; // Can't do this with const reference
 }
