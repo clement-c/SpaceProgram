@@ -1,7 +1,10 @@
 #pragma once
 #include <stdint.h>
+#include <string_view>
+#include <vector>
 
 #include "Engine/Core/Lib.hpp"
+#include "Engine/ResourceManager.hpp"
 #include "Entity.hpp"
 
 // Holds reference to Entities and loads/unloads them
@@ -38,14 +41,18 @@ struct Scene
     // Add entities
 
     DLLEXPORT Entity::EntityId AddEntity(/*resourceId*/);
+    DLLEXPORT Entity::EntityId AddEntity(AssetRef const& assetRef);
+    DLLEXPORT Entity::EntityId AddEntity(std::string_view path);
     // DLLEXPORT Entity::EntityId AddEntity(Entity::Gizmo2D); // Static 2D entities
     // DLLEXPORT Entity::EntityId AddEntity(Entity::Gizmo3D); // Static 3D entities
 
     bool Clear(); // Remove all entities
 
     bool Activate(); // mark all entities as active, allocate/load them - blocking eval - if not loaded, doesn't mean they are all visible, Visibility system handles that on active entities
+    DLLEXPORT bool Activate(bool deferred); // If deferred is false, blocks until all entities are loaded
     bool Deactivate(); // all entities are deactivated, but *not* deallocated
 
 private:
     Entity* m_entitiesPtr = nullptr;
+    std::vector<AssetRef> m_entityAssets; // Asset references for entities
 };

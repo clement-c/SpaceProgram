@@ -2,39 +2,77 @@
 #include <stdint.h>
 #include <functional>
 #include <string_view>
+#include <string>
 #include <vector>
+#include <memory>
 #include "Engine/Core/Lib.hpp"
 
 // Game resources vs scene resources
 
 using UUID = int64_t;
 
+// Special UUID values
+static constexpr UUID INVALID_UUID = -1;
+
+enum class AssetType
+{
+    Unknown = 0,
+    Entity,
+    Model,
+    Texture,
+    Material,
+    Shader,
+    Audio
+};
+
+enum class AssetStatus
+{
+    Pending = 0,
+    Loading,
+    Loaded,
+    Failed
+};
+
 struct AssetRef
 {
-    // UUID uuid;
-    // Path GetPath() const;
-    // Loader::Status GetStatus() const;
-    // Data::Type GetType() const;
+    UUID uuid;
+    std::string path;
+    AssetStatus status;
+    AssetType type;
+    void* data; // TODO: Replace with type-safe variant or smart pointer for better ownership/lifetime management
+    
+    AssetRef() : uuid(INVALID_UUID), path(""), status(AssetStatus::Pending), type(AssetType::Unknown), data(nullptr) {}
+    AssetRef(UUID id, std::string_view p, AssetType t = AssetType::Unknown) 
+        : uuid(id), path(p), status(AssetStatus::Pending), type(t), data(nullptr) {}
 };
 
 class Loader
 {
 public:
-    DLLEXPORT AssetRef Enqueue(std::string_view) noexcept;
+    Loader();
+    
+    DLLEXPORT AssetRef Enqueue(std::string_view path) noexcept;
 
-    DLLEXPORT bool Load(AssetRef &);
+    DLLEXPORT bool Load(AssetRef &asset);
     DLLEXPORT bool LoadAll();
 
-    DLLEXPORT void OnLoadProgress(std::function<void(int, int)> &&);
-    DLLEXPORT void OnLoadError(std::function<bool(AssetRef)> &&);
-    DLLEXPORT void OnLoadComplete(std::function<void()> &&);
+    DLLEXPORT void OnLoadProgress(std::function<void(int, int)> &&callback);
+    DLLEXPORT void OnLoadError(std::function<bool(AssetRef)> &&callback);
+    DLLEXPORT void OnLoadComplete(std::function<void()> &&callback);
+    
+    DLLEXPORT AssetRef const* FindAsset(UUID uuid) const;
+    DLLEXPORT AssetRef const* FindAsset(std::string_view path) const;
 
 private:
-    std::vector<AssetRef> m_manifest; // ?
+    AssetType DetermineAssetType(std::string_view path) const;
+    bool LoadAsset(AssetRef &asset);
+    
+    std::vector<AssetRef> m_manifest;
+    UUID m_nextUUID;
 
-    std::function<void(int, int)> m_progress_cb = nullptr;
-    std::function<bool(AssetRef)> m_error_cb = nullptr;
-    std::function<void()> m_complete_cb = nullptr;
+    std::function<void(int, int)> m_progress_cb;
+    std::function<bool(AssetRef)> m_error_cb;
+    std::function<void()> m_complete_cb;
 };
 
 class ResourceManager
@@ -48,4 +86,6 @@ public:
     // bool PreloadBuffer(); // preload a buffer from files or memory, return as address holder
 
 private:
+    Loader m_mainLoader;
+    std::vector<std::unique_ptr<Loader>> m_loaders;
 };

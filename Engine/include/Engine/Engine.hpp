@@ -5,6 +5,7 @@
 #include "Component.hpp"
 #include "ResourceManager.hpp"
 #include "System.hpp"
+#include "Scene/Scene.hpp"
 
 #include "Core/Lib.hpp"
 
@@ -42,10 +43,12 @@ public:
     DLLEXPORT bool Initialize(InitOptions const &);
     DLLEXPORT bool IsInitialized() const;
 
-    ResourceManager &GetResourceManager();
+    DLLEXPORT ResourceManager &GetResourceManager();
+    DLLEXPORT void SetScene(Scene const& scene);
     // DLLEXPORT int AddSystem();
 
 private:
     ResourceManager m_rsc_manager;
+    Scene* m_activeScene;
     bool m_initialized = false;
 };
