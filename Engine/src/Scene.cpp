@@ -17,8 +17,8 @@ Entity::EntityId Scene::AddEntity(AssetRef const& assetRef)
 Entity::EntityId Scene::AddEntity(std::string_view path)
 {
     CC_LOG_DEBUG("Scene::AddEntity: Adding entity from path '{}'\n", path);
-    // Use -1 as UUID to indicate this asset hasn't been assigned a proper UUID yet
-    AssetRef ref(-1, path, AssetType::Entity);
+    // Use INVALID_UUID to indicate this asset hasn't been assigned a proper UUID yet
+    AssetRef ref(INVALID_UUID, path, AssetType::Entity);
     return AddEntity(ref);
 }
 

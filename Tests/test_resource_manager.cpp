@@ -5,6 +5,7 @@
 #include <Engine/Scene.hpp>
 
 #include <fstream>
+#include <cstdio>
 
 // Helper to create a temporary test asset file
 class TestAssetFile {

@@ -11,6 +11,9 @@
 
 using UUID = int64_t;
 
+// Special UUID values
+static constexpr UUID INVALID_UUID = -1;
+
 enum class AssetType
 {
     Unknown = 0,
