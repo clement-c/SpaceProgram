@@ -95,22 +95,30 @@ TEST(ResourceManager, Loader_LoadSingleAsset)
     
     TestAssetFile testFile("loadable.entity", "{}");
     
-    AssetRef asset = loader.Enqueue("loadable.entity");
-    bool success = loader.Load(asset);
+    loader.Enqueue("loadable.entity");
+    bool success = loader.LoadAll();
     
     EXPECT_TRUE(success);
-    EXPECT_EQ(asset.status, AssetStatus::Loaded);
+    
+    // Verify asset was loaded by finding it
+    AssetRef const* asset = loader.FindAsset("loadable.entity");
+    ASSERT_NE(asset, nullptr);
+    EXPECT_EQ(asset->status, AssetStatus::Loaded);
 }
 
 TEST(ResourceManager, Loader_LoadNonExistentAsset)
 {
     Loader loader;
     
-    AssetRef asset = loader.Enqueue("nonexistent.entity");
-    bool success = loader.Load(asset);
+    loader.Enqueue("nonexistent.entity");
+    bool success = loader.LoadAll();
     
     EXPECT_FALSE(success);
-    EXPECT_EQ(asset.status, AssetStatus::Failed);
+    
+    // Verify asset failed to load
+    AssetRef const* asset = loader.FindAsset("nonexistent.entity");
+    ASSERT_NE(asset, nullptr);
+    EXPECT_EQ(asset->status, AssetStatus::Failed);
 }
 
 TEST(ResourceManager, Loader_LoadAllAssets)
