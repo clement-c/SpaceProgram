@@ -7,8 +7,9 @@
 // Loader Implementation
 // ============================================================================
 
-Loader::Loader() : m_nextUUID(1), m_progress_cb(nullptr), m_error_cb(nullptr), m_complete_cb(nullptr)
+Loader::Loader() : m_nextUUID(0), m_progress_cb(nullptr), m_error_cb(nullptr), m_complete_cb(nullptr)
 {
+    // UUIDs start at 0 and increment. INVALID_UUID (-1) is reserved for unassigned assets.
 }
 
 AssetRef Loader::Enqueue(std::string_view path) noexcept

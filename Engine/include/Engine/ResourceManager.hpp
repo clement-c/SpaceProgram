@@ -41,7 +41,7 @@ struct AssetRef
     AssetType type;
     void* data; // TODO: Replace with type-safe variant or smart pointer for better ownership/lifetime management
     
-    AssetRef() : uuid(0), path(""), status(AssetStatus::Pending), type(AssetType::Unknown), data(nullptr) {}
+    AssetRef() : uuid(INVALID_UUID), path(""), status(AssetStatus::Pending), type(AssetType::Unknown), data(nullptr) {}
     AssetRef(UUID id, std::string_view p, AssetType t = AssetType::Unknown) 
         : uuid(id), path(p), status(AssetStatus::Pending), type(t), data(nullptr) {}
 };
