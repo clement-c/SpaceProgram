@@ -53,15 +53,6 @@ bool Loader::Load(AssetRef &asset)
     {
         asset.status = AssetStatus::Failed;
         CC_LOG_ERROR("Loader::Load: Failed to load asset '{}'\n", asset.path);
-        
-        if (m_error_cb)
-        {
-            bool stopLoading = m_error_cb(asset);
-            if (stopLoading)
-            {
-                return false;
-            }
-        }
     }
     
     return success;
@@ -82,13 +73,21 @@ bool Loader::LoadAll()
     int totalAssets = static_cast<int>(m_manifest.size());
     int loadedAssets = 0;
     
-    CC_LOG_DEBUG("Loader::LoadAll: Loading {} assets\n", totalAssets);
+    // Count already loaded assets
+    for (const auto& asset : m_manifest)
+    {
+        if (asset.status == AssetStatus::Loaded)
+        {
+            loadedAssets++;
+        }
+    }
+    
+    CC_LOG_DEBUG("Loader::LoadAll: Loading {} assets ({} already loaded)\n", totalAssets, loadedAssets);
     
     for (auto& asset : m_manifest)
     {
         if (asset.status == AssetStatus::Loaded)
         {
-            loadedAssets++;
             continue;
         }
         
@@ -98,21 +97,24 @@ bool Loader::LoadAll()
         {
             loadedAssets++;
         }
+        else
+        {
+            // Handle error with callback
+            if (m_error_cb)
+            {
+                bool stopLoading = m_error_cb(asset);
+                if (stopLoading)
+                {
+                    CC_LOG_ERROR("Loader::LoadAll: Stopping load due to error callback\n");
+                    return false;
+                }
+            }
+        }
         
         // Report progress
         if (m_progress_cb)
         {
             m_progress_cb(loadedAssets, totalAssets);
-        }
-        
-        if (!success && m_error_cb)
-        {
-            bool stopLoading = m_error_cb(asset);
-            if (stopLoading)
-            {
-                CC_LOG_ERROR("Loader::LoadAll: Stopping load due to error callback\n");
-                return false;
-            }
         }
     }
     

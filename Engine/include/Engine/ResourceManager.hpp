@@ -36,7 +36,7 @@ struct AssetRef
     std::string path;
     AssetStatus status;
     AssetType type;
-    void* data; // Pointer to loaded resource data
+    void* data; // TODO: Replace with type-safe variant or smart pointer for better ownership/lifetime management
     
     AssetRef() : uuid(0), path(""), status(AssetStatus::Pending), type(AssetType::Unknown), data(nullptr) {}
     AssetRef(UUID id, std::string_view p, AssetType t = AssetType::Unknown) 
