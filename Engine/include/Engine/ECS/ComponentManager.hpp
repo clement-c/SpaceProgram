@@ -84,7 +84,7 @@ public:
 
 private:
     // Packed array of components (set to max entities for simplicity)
-    std::array<T, 10000> m_componentArray;
+    std::array<T, MAX_ENTITIES> m_componentArray;
     
     // Map from entity ID to array index
     std::unordered_map<Entity, size_t> m_entityToIndex;

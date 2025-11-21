@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include <vector>
 #include <string>
+#include <cstring>
 
 namespace Engine::ECS {
 
@@ -65,12 +66,8 @@ public:
         EntityInfo info;
         info.entity = entity;
         if (name) {
-            size_t len = 0;
-            while (name[len] && len < 63) {
-                info.name[len] = name[len];
-                len++;
-            }
-            info.name[len] = '\0';
+            strncpy(info.name, name, sizeof(info.name) - 1);
+            info.name[sizeof(info.name) - 1] = '\0';
         } else {
             snprintf(info.name, sizeof(info.name), "Entity %u", entity);
         }
@@ -176,10 +173,10 @@ private:
             for (size_t i = 0; i < systems.size(); ++i) {
                 const auto& system = systems[i];
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%s", system->GetName())) {
-                    ImGui::Text("Entities: %zu", system->m_entities.size());
+                    ImGui::Text("Entities: %zu", system->GetEntities().size());
                     
-                    if (system->m_entities.size() > 0 && ImGui::TreeNode("Entity List")) {
-                        for (Entity entity : system->m_entities) {
+                    if (system->GetEntities().size() > 0 && ImGui::TreeNode("Entity List")) {
+                        for (Entity entity : system->GetEntities()) {
                             ImGui::BulletText("Entity %u", entity);
                         }
                         ImGui::TreePop();

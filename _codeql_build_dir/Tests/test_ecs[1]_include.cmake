@@ -1,0 +1,5 @@
+if(EXISTS "/home/runner/work/SpaceProgram/SpaceProgram/_codeql_build_dir/Tests/test_ecs[1]_tests.cmake")
+  include("/home/runner/work/SpaceProgram/SpaceProgram/_codeql_build_dir/Tests/test_ecs[1]_tests.cmake")
+else()
+  add_test(test_ecs_NOT_BUILT test_ecs_NOT_BUILT)
+endif()

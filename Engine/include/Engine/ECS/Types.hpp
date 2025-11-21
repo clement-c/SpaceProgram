@@ -13,6 +13,9 @@ constexpr Entity NULL_ENTITY = 0;
 using ComponentTypeID = uint8_t;
 constexpr ComponentTypeID MAX_COMPONENTS = 64;
 
+// Maximum number of entities
+constexpr size_t MAX_ENTITIES = 10000;
+
 // Signature to track which components an entity has
 using Signature = std::bitset<MAX_COMPONENTS>;
 

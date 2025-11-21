@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstring>
+
 namespace Engine::ECS::Components {
 
 /**
@@ -46,12 +48,8 @@ struct Name {
     
     Name() = default;
     Name(const char* n) {
-        size_t len = 0;
-        while (n[len] && len < 63) {
-            name[len] = n[len];
-            len++;
-        }
-        name[len] = '\0';
+        strncpy(name, n, sizeof(name) - 1);
+        name[sizeof(name) - 1] = '\0';
     }
 };
 

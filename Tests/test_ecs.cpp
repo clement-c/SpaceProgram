@@ -103,8 +103,8 @@ TEST(ECS, SystemExecution) {
     world.AddComponent(entity, Velocity{1.0f, 2.0f, 3.0f});
     
     // Verify entity is in system
-    EXPECT_EQ(physicsSystem->m_entities.size(), 1);
-    EXPECT_TRUE(physicsSystem->m_entities.find(entity) != physicsSystem->m_entities.end());
+    EXPECT_EQ(physicsSystem->GetEntities().size(), 1);
+    EXPECT_TRUE(physicsSystem->GetEntities().find(entity) != physicsSystem->GetEntities().end());
     
     // Update system
     world.UpdateSystems(1.0f);
@@ -154,10 +154,10 @@ TEST(ECS, SystemFiltering) {
     world.AddComponent(entity3, Rotation{});
     
     // Check system has correct entities
-    EXPECT_EQ(physicsSystem->m_entities.size(), 2);
-    EXPECT_TRUE(physicsSystem->m_entities.find(entity1) != physicsSystem->m_entities.end());
-    EXPECT_FALSE(physicsSystem->m_entities.find(entity2) != physicsSystem->m_entities.end());
-    EXPECT_TRUE(physicsSystem->m_entities.find(entity3) != physicsSystem->m_entities.end());
+    EXPECT_EQ(physicsSystem->GetEntities().size(), 2);
+    EXPECT_TRUE(physicsSystem->GetEntities().find(entity1) != physicsSystem->GetEntities().end());
+    EXPECT_FALSE(physicsSystem->GetEntities().find(entity2) != physicsSystem->GetEntities().end());
+    EXPECT_TRUE(physicsSystem->GetEntities().find(entity3) != physicsSystem->GetEntities().end());
 }
 
 // Test entity recycling

@@ -36,7 +36,17 @@ public:
      */
     virtual const char* GetName() const = 0;
     
+    /**
+     * @brief Get read-only access to entities managed by this system
+     */
+    const std::set<Entity>& GetEntities() const {
+        return m_entities;
+    }
+
+protected:
     // Set of entities that match this system's signature
+    // Note: SystemManager needs access to modify this
+    friend class SystemManager;
     std::set<Entity> m_entities;
 };
 
