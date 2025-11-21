@@ -1,0 +1,40 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/Engine.dir/link.d"
+  "CMakeFiles/Engine.dir/src/Application.cpp.o"
+  "CMakeFiles/Engine.dir/src/Application.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Camera.cpp.o"
+  "CMakeFiles/Engine.dir/src/Camera.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Engine.cpp.o"
+  "CMakeFiles/Engine.dir/src/Engine.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Entity.cpp.o"
+  "CMakeFiles/Engine.dir/src/Entity.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/GLBuffer.cpp.o"
+  "CMakeFiles/Engine.dir/src/GLBuffer.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/GLProgram.cpp.o"
+  "CMakeFiles/Engine.dir/src/GLProgram.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/GLShader.cpp.o"
+  "CMakeFiles/Engine.dir/src/GLShader.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/GLVAO.cpp.o"
+  "CMakeFiles/Engine.dir/src/GLVAO.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Maths.cpp.o"
+  "CMakeFiles/Engine.dir/src/Maths.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Renderer.cpp.o"
+  "CMakeFiles/Engine.dir/src/Renderer.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/RendererBackendOpenGL.cpp.o"
+  "CMakeFiles/Engine.dir/src/RendererBackendOpenGL.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/ResourceManager.cpp.o"
+  "CMakeFiles/Engine.dir/src/ResourceManager.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Scene.cpp.o"
+  "CMakeFiles/Engine.dir/src/Scene.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/Window.cpp.o"
+  "CMakeFiles/Engine.dir/src/Window.cpp.o.d"
+  "CMakeFiles/Engine.dir/src/WindowsManager.cpp.o"
+  "CMakeFiles/Engine.dir/src/WindowsManager.cpp.o.d"
+  "libEngine.pdb"
+  "libEngine.so"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/Engine.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

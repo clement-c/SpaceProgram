@@ -1,0 +1,13 @@
+prefix=/home/runner/work/SpaceProgram/SpaceProgram/../Install/Release/
+exec_prefix=${prefix}
+includedir=/home/runner/work/SpaceProgram/SpaceProgram/../Install/Release//include
+libdir=/home/runner/work/SpaceProgram/SpaceProgram/../Install/Release//lib
+
+Name: GLFW
+Description: A multi-platform library for OpenGL, window and input
+Version: 3.5.0
+URL: https://www.glfw.org/
+Requires.private: 
+Libs: -L${libdir} -lglfw3
+Libs.private: -lrt -lm -ldl
+Cflags: -I${includedir}

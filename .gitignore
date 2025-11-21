@@ -1,4 +1,5 @@
 build/**
+_codeql_build_dir/**
 Engine/_External/fmt
 Engine/_External/glad/src
 Engine/_External/glad/include

@@ -68,3 +68,35 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME})
 
 install(EXPORT ${LIB_NAME}Config DESTINATION share/${LIB_NAME}/cmake)
 export(TARGETS ${LIB_NAME} FILE ${LIB_NAME}Config.cmake)
+
+# ===== ECS Example =====
+# ECS Example executable (header-only ECS, just needs to compile the example)
+add_executable(ECSExample src/ECS/ECSExample.cpp)
+
+target_include_directories(ECSExample PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(ECSExample PRIVATE fmt imgui)
+
+# Set C++ standard
+set_target_properties(ECSExample PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
+
+# ===== ECS Demo with ImGui =====
+add_executable(ECSDemo src/ECS/ECSDemo.cpp)
+
+target_include_directories(ECSDemo PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(ECSDemo PRIVATE imgui glad)
+
+set_target_properties(ECSDemo PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
+
+install(TARGETS ECSExample ECSDemo RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

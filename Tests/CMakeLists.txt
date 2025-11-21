@@ -17,8 +17,13 @@ include(GoogleTest)
 add_executable(test_maths test_maths.cpp)
 target_link_libraries(test_maths PUBLIC Engine PRIVATE gtest gtest_main)
 
+add_executable(test_ecs test_ecs.cpp)
+target_link_libraries(test_ecs PRIVATE gtest gtest_main)
+target_include_directories(test_ecs PRIVATE ${CMAKE_SOURCE_DIR}/Engine/include)
+
 # FIXME: Not working as apparently not linking correctly to Engine.dll?
 # gtest_discover_tests(test_maths)
+gtest_discover_tests(test_ecs)
 
 # include(GNUInstallDirs)
-install(TARGETS test_maths RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS test_maths test_ecs RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
