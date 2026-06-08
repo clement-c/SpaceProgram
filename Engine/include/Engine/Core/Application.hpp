@@ -20,7 +20,7 @@ public:
 	DLLEXPORT Application(int argc, char **argv);
 	DLLEXPORT ~Application() = default;
 
-	DLLEXPORT ArgsDefinition &GetArgsDefintion();
+	DLLEXPORT ArgsDefinition &GetArgsDefinition();
 	DLLEXPORT Path GetPath() const;
 
 	/**

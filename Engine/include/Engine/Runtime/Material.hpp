@@ -11,7 +11,7 @@ struct Material
         kSolid = 2,
         kMatCap = 4,
         kPBR = 8,
-        kDebugNormals = 16,
+        kDebug = 16,
         kCustom = 24
     };
 

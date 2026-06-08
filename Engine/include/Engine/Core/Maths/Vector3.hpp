@@ -27,7 +27,7 @@ struct Vector3 // alignas(4 * sizeof(float)) Vector3
      * @brief Returns the unit vector along the Y-axis.
      * @return A Vector3 representing (0.0, 1.0, 0.0).
      */
-    static constexpr Vector3 Y() { return Vector3{0.0, 1.0, 0.0}; } ;
+    static constexpr Vector3 Y() { return Vector3{0.0, 1.0, 0.0}; };
 
     /**
      * @brief Returns the unit vector along the Z-axis.
@@ -72,28 +72,28 @@ struct Vector3 // alignas(4 * sizeof(float)) Vector3
      * @param other The vector to add.
      * @return A reference to this vector after addition.
      */
-    DLLEXPORT Vector3 &operator+=(Vector3 const &other) noexcept;
+    DLLEXPORT constexpr Vector3 &operator+=(Vector3 const &other) noexcept;
 
     /**
      * @brief Subtracts another vector from this vector.
      * @param other The vector to subtract.
      * @return A reference to this vector after subtraction.
      */
-    DLLEXPORT Vector3 &operator-=(Vector3 const &other) noexcept;
+    DLLEXPORT constexpr Vector3 &operator-=(Vector3 const &other) noexcept;
 
     /**
      * @brief Multiplies this vector by a scalar.
      * @param scale The scalar value.
      * @return A reference to this vector after scaling.
      */
-    DLLEXPORT Vector3 &operator*=(Scalar scale) noexcept;
+    DLLEXPORT constexpr Vector3 &operator*=(Scalar scale) noexcept;
 
     /**
      * @brief Divides this vector by a scalar.
      * @param scale The scalar value.
      * @return A reference to this vector after division.
      */
-    DLLEXPORT Vector3 &operator/=(Scalar scale);
+    DLLEXPORT constexpr Vector3 &operator/=(Scalar scale);
 
     /**
      * @brief Returns a scaled copy of this vector.
@@ -151,7 +151,7 @@ struct Vector3 // alignas(4 * sizeof(float)) Vector3
      * @brief Normalizes this vector to have a magnitude of 1.
      * @return A reference to this vector after normalization.
      */
-    DLLEXPORT Vector3 &Normalize();
+    DLLEXPORT inline Vector3 &Normalize();
 
     /**
      * @brief Returns a normalized copy of this vector.

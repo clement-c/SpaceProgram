@@ -14,7 +14,6 @@ struct Camera;
 struct Matrix44;
 struct TriangulatedMesh;
 
-
 /**
  * @brief One renderer per window/context
  *

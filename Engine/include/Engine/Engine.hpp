@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <unordered_set>
 
-#include "Component.hpp"
+#include "Core/ECS/Component.hpp"
+#include "Core/ECS/System.hpp"
 #include "ResourceManager.hpp"
-#include "System.hpp"
 
 #include "Core/Lib.hpp"
 
@@ -21,8 +21,8 @@ public:
         // ...
 
         // Core/statically-defined components to register
-        std::bitset<kMaxComponents> components_to_register;
-        std::bitset<16> components_groups_to_register; // ComponentsSets::kHierarchyComponents && ComponentsSets::kRenderComponents;
+        // std::bitset<kMaxComponents> components_to_register;
+        // std::bitset<16> components_groups_to_register; // ComponentsSets::kHierarchyComponents && ComponentsSets::kRenderComponents;
 
         // Core/statically-defined entities to register
         // ...

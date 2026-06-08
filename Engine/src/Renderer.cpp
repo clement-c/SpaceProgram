@@ -70,7 +70,7 @@ bool Renderer::Initialize(Renderer::API api)
 
     if (api == API::kOpenGL45)
     {
-    #ifdef ENGINE_IMPLEMENTS_OPENGL
+#ifdef ENGINE_IMPLEMENTS_OPENGL
         CC_LOG_DEBUG("Initializing renderer with OpenGL 4.5...\n");
         m_backend = std::make_unique<RendererBackendOpenGL>();
         if (m_backend->Initialize())
@@ -80,9 +80,9 @@ bool Renderer::Initialize(Renderer::API api)
             m_backend = nullptr;
             return false;
         }
-    #else
+#else
         CC_LOG_ERROR("OpenGL renderer not implemented in this distribution.");
-    #endif
+#endif
     }
     else if (api == API::kVulkan)
     {
@@ -127,7 +127,6 @@ bool Renderer::RenderAll() const
 
 bool Renderer::DisableItem(uint32_t mesh_gpu_id)
 {
-
     CC_LOG_ERROR("Renderer::DisableItem not implemented");
     return false;
 }

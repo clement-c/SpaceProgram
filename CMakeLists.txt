@@ -11,10 +11,35 @@ endif()
 option(ENGINE_BUILD_DOC "Build documentation" OFF)
 option(ENGINE_BUILD_TESTS "Build tests" ON)
 
-option(ENGINE_IMPLEMENT_OPENGL "Enable OpenGL backend" ON)
-option(ENGINE_IMPLEMENT_VULKAN "Enable Vulkan backend" OFF)
+option(ENGINE_BUILD_DELIVERABLES "Build deliverables compatible with current code" ON)
 
-# add_compile_definitions(CC_LOG_LEVEL CC_SUCCESS_LEVEL)
+# RENDERER
+option(ENGINE_BUILD_RENDERER "Enable rendering - disabled for offline tests" ON)
+option(ENGINE_IMPLEMENT_OPENGL "Enable OpenGL backend" ON)
+option(ENGINE_IMPLEMENT_VULKAN "Enable Vulkan backend" OFF) # Vulkan not implemented yet
+
+# Specifically setup for github workflow - not building graphics for these
+option(ENGINE_GITHUB_WORKFLOW "Enable GitHub workflow - Builds only tests and base application framework" OFF)
+# set(ENGINE_GITHUB_WORKFLOW ON)
+
+if(${ENGINE_GITHUB_WORKFLOW})
+  set(ENGINE_BUILD_TESTS ON)
+  set(ENGINE_BUILD_DOC OFF)
+  set(ENGINE_BUILD_DELIVERABLES OFF)
+  set(ENGINE_BUILD_RENDERER OFF)
+endif()
+
+if(NOT ${ENGINE_BUILD_RENDERER})
+  set(ENGINE_IMPLEMENT_OPENGL OFF)
+  set(ENGINE_IMPLEMENT_VULKAN OFF)
+  set(ENGINE_IMPLEMENT_IMGUI OFF)
+endif()
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  set(CC_LOG_LEVEL CC_DEBUG_LEVEL)
+else()
+  set(CC_LOG_LEVEL CC_SUCCESS_LEVEL)
+endif()
 
 include(GNUInstallDirs)
 
@@ -56,4 +81,6 @@ if(${ENGINE_BUILD_TESTS})
   add_subdirectory(Tests)
 endif()
 
-add_subdirectory(Deliverables)
+if(${ENGINE_BUILD_DELIVERABLES})
+  add_subdirectory(Deliverables)
+endif()

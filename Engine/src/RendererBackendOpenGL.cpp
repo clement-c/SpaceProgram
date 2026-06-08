@@ -65,7 +65,6 @@ bool RendererBackendOpenGL::Shutdown()
     return true;
 }
 
-
 uint32_t RendererBackendOpenGL::UploadMesh(TriangulatedMesh const &mesh)
 {
     CC_LOG_DEBUG("Uploading mesh using OpenGL backend...\n");
@@ -124,7 +123,17 @@ bool RendererBackendOpenGL::RenderAll()
     }
 
     auto view_matrix = m_camera.GetViewMatrix();
-    Vector3 default_directional_light = Vector3(0.5, 0.707107, 0.5); // Points 45 degrees down and forward
+
+    Vector3 default_directional_light_camera_space = Vector3(0.5, 0.707107, 0.5); // Points 45 degrees down and forward in camera space
+
+    // Extract the rotation part of the view matrix and invert it to transform the light direction
+    // The view matrix transforms from world to camera space, so its inverse rotation transforms from camera to world space
+    Matrix33 view_rotation(
+        view_matrix(0, 0), view_matrix(0, 1), view_matrix(0, 2),
+        view_matrix(1, 0), view_matrix(1, 1), view_matrix(1, 2),
+        view_matrix(2, 0), view_matrix(2, 1), view_matrix(2, 2));
+    Matrix33 inv_view_rotation = view_rotation.Transposed(); // For orthonormal matrices, transpose = inverse
+    Vector3 default_directional_light = default_directional_light_camera_space * inv_view_rotation;
 
     // Set camera uniforms (projection/view)
     // TODO: dirty flag on projection matrix, do not recompute if ratio is similar - maybe a projection matrix per RenderTarget

@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-
 /**
  * @brief A RenderSurface is passed to the Renderer in order to
  *
@@ -9,14 +8,15 @@
 struct RenderSurface
 {
     uint32_t Width = 1280, Height = 720;
-    float Ratio = 1.0f;
     float UIScaleMultiplier = 1.0f;
+
+    uint32_t ClearColor[4] = {15, 50, 10, 255}; // RGBA
 
     /// @brief Returns the aspect ratio of the render surface.
     /// @return The aspect ratio as a float.
     float GetAspectRatio() const
     {
-        return Width > 0 ? static_cast<float>(Width) / static_cast<float>(Height) : 0.0f;
+        return Height > 0 ? static_cast<float>(Width) / static_cast<float>(Height) : 0.0f;
     }
 
     /**
@@ -29,7 +29,26 @@ struct RenderSurface
     {
         Width = width;
         Height = height;
-        Ratio = static_cast<float>(Width) / static_cast<float>(Height);
+        return *this;
+    }
+
+    /**
+     * @brief Updates the UIScaleMultiplier of the render surface.
+     * @param scale The new UIScaleMultiplier.
+     * @return A reference to the updated RenderSurface object.
+     */
+    RenderSurface &UpdateUIScale(float scale)
+    {
+        UIScaleMultiplier = scale;
+        return *this;
+    }
+
+    RenderSurface &SetClearColor(float r, float g, float b, float a)
+    {
+        ClearColor[0] = r;
+        ClearColor[1] = g;
+        ClearColor[2] = b;
+        ClearColor[3] = a;
         return *this;
     }
 };

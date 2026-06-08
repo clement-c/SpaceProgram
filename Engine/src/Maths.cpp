@@ -17,7 +17,7 @@ constexpr Scalar &Vector3::operator[](uint32_t i)
     return data[i];
 }
 
-Vector3 &Vector3::operator+=(Vector3 const &other) noexcept
+constexpr Vector3 &Vector3::operator+=(Vector3 const &other) noexcept
 {
     x += other.x;
     y += other.y;
@@ -25,7 +25,7 @@ Vector3 &Vector3::operator+=(Vector3 const &other) noexcept
     return *this;
 }
 
-Vector3 &Vector3::operator-=(Vector3 const &other) noexcept
+constexpr Vector3 &Vector3::operator-=(Vector3 const &other) noexcept
 {
     x -= other.x;
     y -= other.y;
@@ -33,7 +33,7 @@ Vector3 &Vector3::operator-=(Vector3 const &other) noexcept
     return *this;
 }
 
-Vector3 &Vector3::operator*=(Scalar scale) noexcept
+constexpr Vector3 &Vector3::operator*=(Scalar scale) noexcept
 {
     x *= scale;
     y *= scale;
@@ -41,7 +41,7 @@ Vector3 &Vector3::operator*=(Scalar scale) noexcept
     return *this;
 }
 
-Vector3 &Vector3::operator/=(Scalar scale)
+constexpr Vector3 &Vector3::operator/=(Scalar scale)
 {
     x /= scale;
     y /= scale;
@@ -93,7 +93,7 @@ inline Scalar Vector3::Magnitude() const noexcept
     return std::sqrt(MagnitudeSquared());
 }
 
-Vector3 &Vector3::Normalize()
+inline Vector3 &Vector3::Normalize()
 {
     Scalar r = (Scalar)1.0f / Magnitude();
     x *= r;
@@ -158,7 +158,7 @@ constexpr Vector4::operator Vector3() const
 
 bool Matrix44::IsOrthonormal() const noexcept
 {
-    return fabs(kOne - fabs(Vector3(row0).Dot(Vector3(row1)))) < kEpsilon && fabs(kOne - fabs(Vector3(row1).Dot(Vector3(row2))));
+    return fabs(kOne - fabs(Vector3(row0).Dot(Vector3(row1)))) < kEpsilon && fabs(kOne - fabs(Vector3(row1).Dot(Vector3(row2)))) < kEpsilon;
 }
 
 constexpr Matrix44 Matrix44::HadamardProduct(Matrix44 const &other) const
@@ -287,25 +287,26 @@ Matrix44 &Matrix44::InvertInPlaceOrthonormal()
 
 Matrix44 &Matrix44::MultiplyInPlace(Matrix44 const &other)
 {
-    a00 = a00 * other.a00 + a01 * other.a10 + a02 * other.a20 + a03 * other.a30;
-    a01 = a00 * other.a01 + a01 * other.a11 + a02 * other.a21 + a03 * other.a31;
-    a02 = a00 * other.a02 + a01 * other.a12 + a02 * other.a22 + a03 * other.a32;
-    a03 = a00 * other.a03 + a01 * other.a13 + a02 * other.a23 + a03 * other.a33;
+    auto curr = *this;
+    a00 = curr.a00 * other.a00 + curr.a01 * other.a10 + curr.a02 * other.a20 + curr.a03 * other.a30;
+    a01 = curr.a00 * other.a01 + curr.a01 * other.a11 + curr.a02 * other.a21 + curr.a03 * other.a31;
+    a02 = curr.a00 * other.a02 + curr.a01 * other.a12 + curr.a02 * other.a22 + curr.a03 * other.a32;
+    a03 = curr.a00 * other.a03 + curr.a01 * other.a13 + curr.a02 * other.a23 + curr.a03 * other.a33;
 
-    a10 = a10 * other.a00 + a11 * other.a10 + a12 * other.a20 + a13 * other.a30;
-    a11 = a10 * other.a01 + a11 * other.a11 + a12 * other.a21 + a13 * other.a31;
-    a12 = a10 * other.a02 + a11 * other.a12 + a12 * other.a22 + a13 * other.a32;
-    a13 = a10 * other.a03 + a11 * other.a13 + a12 * other.a23 + a13 * other.a33;
+    a10 = curr.a10 * other.a00 + curr.a11 * other.a10 + curr.a12 * other.a20 + curr.a13 * other.a30;
+    a11 = curr.a10 * other.a01 + curr.a11 * other.a11 + curr.a12 * other.a21 + curr.a13 * other.a31;
+    a12 = curr.a10 * other.a02 + curr.a11 * other.a12 + curr.a12 * other.a22 + curr.a13 * other.a32;
+    a13 = curr.a10 * other.a03 + curr.a11 * other.a13 + curr.a12 * other.a23 + curr.a13 * other.a33;
 
-    a20 = a20 * other.a00 + a21 * other.a10 + a22 * other.a20 + a23 * other.a30;
-    a21 = a20 * other.a01 + a21 * other.a11 + a22 * other.a21 + a23 * other.a31;
-    a22 = a20 * other.a02 + a21 * other.a12 + a22 * other.a22 + a23 * other.a32;
-    a23 = a20 * other.a03 + a21 * other.a13 + a22 * other.a23 + a23 * other.a33;
+    a20 = curr.a20 * other.a00 + curr.a21 * other.a10 + curr.a22 * other.a20 + curr.a23 * other.a30;
+    a21 = curr.a20 * other.a01 + curr.a21 * other.a11 + curr.a22 * other.a21 + curr.a23 * other.a31;
+    a22 = curr.a20 * other.a02 + curr.a21 * other.a12 + curr.a22 * other.a22 + curr.a23 * other.a32;
+    a23 = curr.a20 * other.a03 + curr.a21 * other.a13 + curr.a22 * other.a23 + curr.a23 * other.a33;
 
-    a30 = a30 * other.a00 + a31 * other.a10 + a32 * other.a20 + a33 * other.a30;
-    a31 = a30 * other.a01 + a31 * other.a11 + a32 * other.a21 + a33 * other.a31;
-    a32 = a30 * other.a02 + a31 * other.a12 + a32 * other.a22 + a33 * other.a32;
-    a33 = a30 * other.a03 + a31 * other.a13 + a32 * other.a23 + a33 * other.a33;
+    a30 = curr.a30 * other.a00 + curr.a31 * other.a10 + curr.a32 * other.a20 + curr.a33 * other.a30;
+    a31 = curr.a30 * other.a01 + curr.a31 * other.a11 + curr.a32 * other.a21 + curr.a33 * other.a31;
+    a32 = curr.a30 * other.a02 + curr.a31 * other.a12 + curr.a32 * other.a22 + curr.a33 * other.a32;
+    a33 = curr.a30 * other.a03 + curr.a31 * other.a13 + curr.a32 * other.a23 + curr.a33 * other.a33;
 
     return *this;
 }

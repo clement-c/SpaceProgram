@@ -2,7 +2,9 @@
 #include "Engine/Core/Window.hpp"
 #include "Engine/Core/Logging.hpp"
 
+#ifdef ENGINE_BUILD_RENDERER
 #include <glad/gl.h>
+#endif
 #include <GLFW/glfw3.h>
 
 WindowsManager::WindowsManager() {}
@@ -24,7 +26,7 @@ bool WindowsManager::Initialize()
 		return false;
 	}
 
-	// TODO: Move to renderer (OpenGL impl)
+	// FIXME: Move to renderer (OpenGL impl)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -81,7 +83,7 @@ Window *const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std:
 
 	glfwMakeContextCurrent(ptr);
 
-	// TODO: Move to OpenGL impl
+	// FIXME: Move to OpenGL impl
 	if (!m_gladInitialized)
 	{
 		CC_LOG_DEBUG("Initializing Glad interface...\n");
@@ -91,7 +93,7 @@ Window *const WindowsManager::NewWindow(uint32_t const w, uint32_t const h, std:
 		}
 		CC_LOG_SUCCESS("Loaded OpenGL {}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
-		if (version = 0)
+		if (version == 0)
 		{
 			CC_LOG_ERROR("Failed to create a window as GLAD could not initialize\n");
 			return nullptr;
